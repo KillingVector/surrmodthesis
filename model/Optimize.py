@@ -48,7 +48,7 @@ def main():
     '''    Modify these values to choose fidelity level
         and modeling method    '''
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
-    fidelity_level  = 0 # 0 or 2 atm.
+    fidelity_level  = 2 # 0 or 2 atm.
     # MODEL METHOD
     model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
@@ -95,44 +95,48 @@ def main():
 
 
 
-    if model_method == 'k':
+    if model_method == 'k' and not from_file:
 #        a = nexus.objective()
         surr.sample_plan.size = 40
         surr.sample_plan.lhc_type   = 'o'
         surr.sample_plan.time       = time
-        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
+#        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
 #        t1b = datetime.datetime.now()
  
-#        data1 = np.genfromtxt('./results/lfhf/k20-2km25-spantp-cheap.csv',delimiter=',')
+        data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantpsw-2018-10-19 20:02:16.075104-lhc30.csv',delimiter=',')
 #        data2 = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
 #        surr.sample_plan.lhc = data[0:5,:]
 #        surr.sample_plan.lhc = np.array([[5.0, 0.1],[5.0, 1.0], [20.0,0.1],[20.0,1.0]]) # span taper
 #        surr.sample_plan.lhc = np.array([[5,	0.1,	0],[5,	0.1, 45],[5,	1,	0],[5,	1,	45],[20,	0.1,	0],[20,	0.1,	45],[20,	1,	0],[20,	1,	45]])
-#        surr.sample_plan.lhc = data[:,0:2]
+        surr.sample_plan.lhc = data1[31:39,:]
+
+        data2 = data1[3:10,:]
+        data3 = data1[17:23,:]
+
 
 #        print surr.sample_plan.lhc
 #        quit()
         surr.evaluate_of(nexus)
         t2a = datetime.datetime.now()
-        surr.single_fid_kriging(nexus, improve=False)
+#        surr.single_fid_kriging(nexus, improve=False)
 #        k1 = kriging(data1[:,0:2],data1[:,2])
 #        k2 = kriging(data2[:,0:2],data2[:,2])
 #        k1.train()
 #        k2.train()
 
-        k0 = surr.model0
-        k1 = surr.model1
-        if len(inpstr) <= 2:
-            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
-            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
+#        k0 = surr.model0
+#        k1 = surr.model1
+#        if len(inpstr) <= 2:
+#            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
+#            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
 #        elif len(inpstr) == 3:
 #            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
 #            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
-        saveModel(surr.model0,'./rawresults/kriging/'+savename+'-lhc'+str(surr.sample_plan.size)+'-surrmod0'+'.pkl')
-        saveModel(surr.model1,'./rawresults/kriging/'+savename+'-lhc'+str(surr.sample_plan.size)+'-surrmod1'+'.pkl')
+#        saveModel(surr.model0,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod0'+'.pkl')
+#        saveModel(surr.model1,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod1'+'.pkl')
         t2b = datetime.datetime.now()
 #        quit()
-        with open('./rawresults/kriging/'+savename+str(t2a)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
+        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
             wrc=csv.writer(filec)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
@@ -142,7 +146,62 @@ def main():
                 row.append(surr.y[i,1])
                 wrc.writerow(row)
 
+
+
+        surr.sample_plan.lhc = data2
+
+#        print surr.sample_plan.lhc
 #        quit()
+        surr.evaluate_of(nexus)
+#        t2a = datetime.datetime.now()
+#        surr.single_fid_kriging(nexus, improve=False)
+#        k1 = kriging(data1[:,0:2],data1[:,2])
+#        k2 = kriging(data2[:,0:2],data2[:,2])
+#        k1.train()
+#        k2.train()
+
+#        k0 = surr.model0
+#        k1 = surr.model1
+#        if len(inpstr) <= 2:
+#            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
+#            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
+#        elif len(inpstr) == 3:
+#            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
+#            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
+#        saveModel(surr.model0,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod0'+'.pkl')
+#        saveModel(surr.model1,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod1'+'.pkl')
+        t2b = datetime.datetime.now()
+#        quit()
+        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
+            wrc=csv.writer(filec)
+            for i in range(0,np.shape(surr.X)[0]):
+                row = []
+                for item in surr.X[i,:]:
+                    row.append(item)
+                row.append(surr.y[i,0])
+                row.append(surr.y[i,1])
+                wrc.writerow(row)
+
+        surr.sample_plan.lhc = data3
+        surr.evaluate_of(nexus)
+        t2b = datetime.datetime.now()
+        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
+            wrc=csv.writer(filec)
+            for i in range(0,np.shape(surr.X)[0]):
+                row = []
+                for item in surr.X[i,:]:
+                    row.append(item)
+                row.append(surr.y[i,0])
+                row.append(surr.y[i,1])
+                wrc.writerow(row)
+
+
+
+
+
+
+
+        quit()
 
         ke = surr.model0
         km = surr.model1
@@ -239,8 +298,63 @@ def main():
         iw.show_results(title='')
         iw.show_gen_results()
         iw.save_results(name = './rawresults/cokriging/ck2-30km2-'+inputstring)
-        
 
+######################### FROM FILE
+    elif model_method == 'k' and from_file:
+
+        p1  = [6., .4, 30.]
+        p2  = [12., .6, 15.]
+        p3  = [17., .2, 47.]
+        p4  = [8., .8, 8.]
+
+
+        m10 = loadModel('../results/studies/k0-30km2-lhc10-spantpsw-surrmod0.pkl')       
+        m20 = loadModel('../results/studies/k0-30km2-spantpsw--lhc20-surrmod0.pkl')
+        m30 = loadModel('../results/studies/k0-30km2-spantpsw--lhc30-surrmod0.pkl')
+        m40 = loadModel('../results/studies/k0-30km2-spantpsw--lhc40-surrmod0.pkl')
+        m50 = loadModel('../results/studies/k0-30km2-spantpsw--lhc50-surrmod0.pkl')
+
+        optprob.inputs[:,1] = p1
+        p1o = nexus.objective()
+        optprob.inputs[:,1] = p2
+        p2o = nexus.objective()
+        optprob.inputs[:,1] = p3
+        p3o = nexus.objective()
+        optprob.inputs[:,1] = p4
+        p4o = nexus.objective()
+
+
+        print '==='+str(p1)
+        print 'corel: ' + str(p1o)
+        print m10.predict(p1)
+        print m20.predict(p1)
+        print m30.predict(p1)
+        print m40.predict(p1)
+        print m50.predict(p1)
+        
+        print '==='+str(p2)
+        print 'corel: ' + str(p2o)
+        print m10.predict(p2)
+        print m20.predict(p2)
+        print m30.predict(p2)
+        print m40.predict(p2)
+        print m50.predict(p2)
+
+        print '==='+str(p3)
+        print 'corel: ' + str(p3o)
+        print m10.predict(p3)
+        print m20.predict(p3)
+        print m30.predict(p3)
+        print m40.predict(p3)
+        print m50.predict(p3)
+
+        print '==='+str(p4)
+        print 'corel: ' + str(p4o)
+        print m10.predict(p4)
+        print m20.predict(p4)
+        print m30.predict(p4)
+        print m40.predict(p4)
+        print m50.predict(p4)
 
 
 
