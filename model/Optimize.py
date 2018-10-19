@@ -104,14 +104,15 @@ def main():
 #        t1b = datetime.datetime.now()
  
         data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantpsw-2018-10-19 20:02:16.075104-lhc30.csv',delimiter=',')
+        data1 = data1[:,0:3]
 #        data2 = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
 #        surr.sample_plan.lhc = data[0:5,:]
 #        surr.sample_plan.lhc = np.array([[5.0, 0.1],[5.0, 1.0], [20.0,0.1],[20.0,1.0]]) # span taper
 #        surr.sample_plan.lhc = np.array([[5,	0.1,	0],[5,	0.1, 45],[5,	1,	0],[5,	1,	45],[20,	0.1,	0],[20,	0.1,	45],[20,	1,	0],[20,	1,	45]])
-        surr.sample_plan.lhc = data1[31:39,:]
+        surr.sample_plan.lhc = data1[0:3,:]
 
-        data2 = data1[3:10,:]
-        data3 = data1[17:23,:]
+        data2 = data1[10:17,:]
+        data3 = data1[23:31,:]
 
 
 #        print surr.sample_plan.lhc
