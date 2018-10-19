@@ -278,7 +278,7 @@ def post_process(nexus):
     mis = nexus.missions.mission.segments.cruise
     vec = nexus.vehicle_configurations.base
     res = nexus.results.mission.segments.cruise.conditions
-    print res
+
     
     # Final Energy
     maxcharge    = vec.propulsors.network.battery.max_energy
@@ -298,7 +298,7 @@ def post_process(nexus):
     aoa_deg = np.rad2deg(res.aerodynamics.angle_of_attack[0])
     print 'Angle of attack : ' + str(aoa_deg) + ' --st dev : ' \
     + str(np.rad2deg(np.std(res.aerodynamics.angle_of_attack)))
-
+    print 'Velocity vector average : ' + str(np.average(res.frames.inertial.velocity_vector[:,0]))
 #    print res.frames.wind.drag_force_vector
 #    print res.frames.wind.lift_force_vector
     drag    = -res.frames.wind.drag_force_vector[0,0] # added

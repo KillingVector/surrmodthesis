@@ -9,8 +9,8 @@
 
 from SUAVE.Core import Units, Data
 import numpy as np
-import Vehicles_lf, Vehicles_mf, Vehicles_hf
-import Analyses_lf, Analyses_mf, Analyses_hf
+import Vehicles_lf, Vehicles_lf, Vehicles_hf
+import Analyses_lf, Analyses_lf, Analyses_hf
 import Missions
 import Procedure
 #import Plot_Mission
@@ -28,7 +28,7 @@ from inspyred_wrapper import inspyred_wrapper as optimizer
 import openmdao
 from openmdao.surrogate_models.kriging import KrigingSurrogate
 
-from carpet_plot import carpet_plot
+
 import csv, datetime, os
 
 from mpl_toolkits.mplot3d import Axes3D
@@ -48,7 +48,7 @@ def main():
     '''    Modify these values to choose fidelity level
         and modeling method    '''
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
-    fidelity_level  = 0
+    fidelity_level  = 0 # 0 or 2 atm.
     # MODEL METHOD
     model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
@@ -71,53 +71,24 @@ def main():
     print "inputs" + str(inpstr)
     print 'object' + str(objstr)
 
-    savename=''
+    inputstring=''
     for var in inpstr:
-        if not savename == '':
+        if not inputstring == '':
             if var == 'rcp_tip':
                 contr = 'tp'
             elif var == 'dihedral':
                 contr = 'do'
             else:
                 contr = var[0:2]
-            savename = savename+contr
+            inputstring = inputstring+contr
         else:
-            savename = var
-    saveloc = './krigingres/correl/'
-    savename = 'att'+model_method+str(fidelity_level)+'-' +'2km'+'25-'+ savename+'-'
+            inputstring = var
+    savename = model_method+str(fidelity_level)+'-' +'30km'+'2-'+ inputstring+'-'
     print 'Files will be saved under prefix : \"' + savename +'\"'
 
-    
-#    [cands, gens] = loadModel('./results/mfhf/span-rcp_tip_2_ck_cokrig_optcands_generations.pkl')
-
-#    # get last generation and candidates
-#    lastgen = gens[-1]
-#    lastcan = cands[-1]
-#    can100 = []
-#    gen100 = []
-
-#    for i in range(0,len(lastgen)):
-#        member = lastcan[i]
-#        result = lastgen[i]
-#        if result[0] > -27 and result[0] < -22:
-#            can100.append(member)
-#            gen100.append(result)
-#    print gen100
-
-#    with open('./results/mfhf/constrainedresults_sptpswp'+'.csv','w+b') as filec:
-#        wrc=csv.writer(filec)
-#        for i in range(0,len(gen100)):
-#            row = []
-#            for item in can100[i]:
-#                row.append(item)
-#            for item2 in gen100[i]:
-#                row.append(item2)
-#            wrc.writerow(row)    
+    t1b = datetime.datetime.now()
+#    print nexus.objective()
 #    quit()
-
-#    optprob.inputs[:,1] = [20.,1.]
-    print nexus.objective()
-    quit()
 
 
 
@@ -126,14 +97,14 @@ def main():
 
     if model_method == 'k':
 #        a = nexus.objective()
-        surr.sample_plan.size = 30
+        surr.sample_plan.size = 40
         surr.sample_plan.lhc_type   = 'o'
         surr.sample_plan.time       = time
         surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
 #        t1b = datetime.datetime.now()
  
-#        data1 = np.genfromtxt('./results/mfhf/k20-2km25-spantp-cheap.csv',delimiter=',')
-#        data2 = np.genfromtxt('./results/mfhf/k20-2km25-sptp-exp.csv',delimiter=',')
+#        data1 = np.genfromtxt('./results/lfhf/k20-2km25-spantp-cheap.csv',delimiter=',')
+#        data2 = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
 #        surr.sample_plan.lhc = data[0:5,:]
 #        surr.sample_plan.lhc = np.array([[5.0, 0.1],[5.0, 1.0], [20.0,0.1],[20.0,1.0]]) # span taper
 #        surr.sample_plan.lhc = np.array([[5,	0.1,	0],[5,	0.1, 45],[5,	1,	0],[5,	1,	45],[20,	0.1,	0],[20,	0.1,	45],[20,	1,	0],[20,	1,	45]])
@@ -144,18 +115,24 @@ def main():
         surr.evaluate_of(nexus)
         t2a = datetime.datetime.now()
         surr.single_fid_kriging(nexus, improve=False)
-        k1 = kriging(data1[:,0:2],data1[:,2])
-        k2 = kriging(data2[:,0:2],data2[:,2])
-        k1.train()
-        k2.train()
+#        k1 = kriging(data1[:,0:2],data1[:,2])
+#        k2 = kriging(data2[:,0:2],data2[:,2])
+#        k1.train()
+#        k2.train()
+
+        k0 = surr.model0
+        k1 = surr.model1
         if len(inpstr) <= 2:
-            surr.get_plot(nexus,model = k1, model1 = k2,zlabel='L/D',mapname='winter')
-            surr.get_plot(nexus,surr.model1,zlabel='Mass(kg)',mapname='copper')
-#        saveModel(surr.model0,saveloc+savename+'surrmod0'+'.pkl')
-#        saveModel(surr.model1,saveloc+savename+'surrmod1'+'.pkl')
-#        t2b = datetime.datetime.now()
-        quit()
-        with open('./results/'+savename+str(t2a)+'.csv','w+b') as filec:
+            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
+            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
+#        elif len(inpstr) == 3:
+#            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
+#            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
+        saveModel(surr.model0,'./rawresults/kriging/'+savename+'-lhc'+str(surr.sample_plan.size)+'-surrmod0'+'.pkl')
+        saveModel(surr.model1,'./rawresults/kriging/'+savename+'-lhc'+str(surr.sample_plan.size)+'-surrmod1'+'.pkl')
+        t2b = datetime.datetime.now()
+#        quit()
+        with open('./rawresults/kriging/'+savename+str(t2a)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
             wrc=csv.writer(filec)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
@@ -165,14 +142,7 @@ def main():
                 row.append(surr.y[i,1])
                 wrc.writerow(row)
 
-        quit()
-
-        ''' USE THIS BIT TO GET PLOTS OF DIFFERENCES '''
-#        avlmod = loadModel('./results/2kmdescent/avl/k1_sptp_surrmod0.pkl')
-#        cormod = loadModel('./results/2kmdescent/correl/k0_sptp_surrmod0.pkl')
-#        surr.model0 = loadModel(saveloc+savename+'_surrmod0'+'.pkl')
-#        surr.model1 = loadModel(saveloc+savename+'_surrmod1'+'.pkl')
-
+#        quit()
 
         ke = surr.model0
         km = surr.model1
@@ -180,34 +150,36 @@ def main():
 #        if len(inpstr) <= 3:
 #            surr.get_plot(nexus,model=ke,zlabel='L/D',mapname='winter')#surr.modelck0)
 #            surr.get_plot(nexus,model=km,zlabel='Mass (kg)',mapname='copper')
-#        elif len(inpstr) == 3:
-#            surr.get_plot3X(nexus,model=ke,zlabel='L/D',mapname='winter')
-#            surr.get_plot3X(nexus,model=km,zlabel='Mass (kg)',mapname='copper')
+
 #        quit()
         t2 = datetime.datetime.now()
         iw = optimizer(nexus,'k')
-        quit()
+#        quit()
         iw.evolve()
         t3 = datetime.datetime.now()
         iw.show_results(title='Pareto-front')
         iw.show_gen_results()
-        iw.save_results(name = saveloc+savename+'_opt')
+        iw.save_results(name = './rawresults/kriging/'+savename+'-lhc'+str(surr.sample_plan.size)+'_opt')
 
 
-        print 'For LHC size: ' + str(surr.sample_plan.size)
+        print 'For LHC size: ' + str(np.shape(surr.X))
         print 'Setup time = ' + str((t1b-t1).total_seconds()) + ' sec'
         print 'Model runs time = ' + str((t2a-t1b).total_seconds()) + ' sec'
         print 'Optimisation time = ' + str((t3-t2b).total_seconds()) + ' sec'
-        print np.shape(surr.sample_plan.lhc)
+
+        print '\n\n Kriging model info:\n'
+        print 'Thetas L/D : ' + str(surr.model0.theta)
+        print 'Thetas mass: ' + str(surr.model1.theta)
+        print 'p L/D : ' + str(surr.model0.pl)
+        print 'p mass: ' + str(surr.model1.pl)
 
 #####################################################################
     elif model_method == 'ck' and not from_file:
 
-#        a = surr.op.lf.objective()
-#        b = surr.op.mf.objective()
+
         surr.sample_plan.lhc_type   = 'o'
         surr.sample_plan.time   = time
-        t2a = surr.hybrid_cokriging(nexus,'./results/k20'+savename+'cokriging')
+        t2a = surr.hybrid_cokriging(nexus,'./rawresults/cokriging'+savename)
 #        surr.save_ck('./results/'+savename+'cokriging') # should be unnecessary
         t2 = datetime.datetime.now()
         # plotting methods
@@ -224,21 +196,19 @@ def main():
         iw.evolve()
         iw.show_results(title='')
         iw.show_gen_results()
-        iw.save_results(name = './results/atk20'+savename+'cokrig_opt')
+        iw.save_results(name = './rawresults/cokriging/'+savename+'opt')
 #    quit()
 
 
 ######################### FROM FILE
     elif model_method == 'ck' and from_file:
-#        a = surr.op.lf.objective()
-#        b = surr.op.mf.objective()
-        surr.defaultck()
+
         # surr.load_ck() # no .pkl
         # surr.model999 = loadModel() # pykriging built, need .pkl
-        surr.load_ck('./results/mfhf/k20ck2-2km25-spantp-cokriging-verysmall')
-        datac = np.genfromtxt('./results/mfhf/k20-2km25-sptp-cheap-verysmall.csv',delimiter=',')
-        datae = np.genfromtxt('./results/mfhf/k20-2km25-sptp-exp-verysmall.csv',delimiter=',')
-#        datae = np.genfromtxt('./results/mfhf/k20-2km25-sptp-exp.csv',delimiter=',')
+        surr.load_ck('./results/lfhf/k20ck2-2km25-spantp-cokriging-verysmall')
+        datac = np.genfromtxt('./results/lfhf/k20-2km25-sptp-cheap-verysmall.csv',delimiter=',')
+        datae = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp-verysmall.csv',delimiter=',')
+#        datae = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
 #        k1 = loadModel('./krigingres/avl/k1-2km25-spantp-surrmod0.pkl')
 #        print k0.theta
 #        print k1.theta
@@ -247,7 +217,7 @@ def main():
 #        k0.train()
 #        km = kriging(datac[:,0:2],datac[:,3])
 #        km.train()
-#        saveModel(km,'./results/mfhf/k20ck2-2km25-spantp-cokriging-verysmall.pkl')
+#        saveModel(km,'./results/lfhf/k20ck2-2km25-spantp-cokriging-verysmall.pkl')
 #        surr.model0 = k0
         k1 = kriging(datae[:,0:2],datae[:,2])
         k1.train()
@@ -268,7 +238,7 @@ def main():
         iw.evolve()
         iw.show_results(title='')
         iw.show_gen_results()
-        iw.save_results(name = './results/mfhf/ck2-2km25-sptpSML-optres')
+        iw.save_results(name = './rawresults/cokriging/ck2-30km2-'+inputstring)
         
 
 
@@ -301,11 +271,11 @@ def base_design():
     # make pc chord and span vals
     pl_psl      = pl_wid/vec.span
     pl_ttc      = pl_hgt/vec.root_chord
-    print pl_psl
+#    print pl_psl
 
     # make sizing vectors
     vec.psl             = np.array([0.])#, pl_psl])#, 0.5])
-    vec.sqc             = np.array([40.])#, 5.])#, 10.])
+    vec.sqc             = np.array([30.])#, 5.])#, 10.])
     vec.rcp             = np.array([1., .4])#, .4])#, .1]) #rcp[-1] tip chord
     vec.ttc             = np.array([pl_ttc, 0.2])#, 0.1])#, .08]) # thickness
     vec.do              = np.array([5.])#, 0.])#, 0.])
@@ -360,9 +330,9 @@ def setup(fidelity_method):
     if len(vec.psl) == 1:
         problem.inputs      = np.array([
             [ 'span'       ,   vec.span, (  2*vec.root_chord,   20.0 ),  1.0, Units.less],
-    ##        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
+#    #        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
             [ 'rcp_tip' ,  vec.rcp[-1], (  0.05,    1.0 ),  1.0, Units.less    ],  
-#            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
+            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
 #            [ 'dihedral' ,  vec.do[0] , ( -5.0,    5.0 ),  1.0, Units.degrees ],
 #            [ 'twist_tip' ,  vec.tw[-1], ( -5.0,    5.0 ),1.0, Units.degrees  ],
         ])
@@ -463,12 +433,12 @@ def setup(fidelity_method):
                 print 'med fid'
                 nexus_1           = Nexus()
                 nexus_1.fidelity_level         = 1
-                nexus.surrogate_data.op.mf     = nexus_1
+                nexus.surrogate_data.op.lf     = nexus_1
                 nexus_1.surrogate_data         = surrogate_data
 
                 nexus_1.optimization_problem   = problem
                 nexus_1.vehicle_configurations = Vehicles_lf.setup(nexus_1)
-                nexus_1.analyses  = Analyses_mf.setup(nexus_1.vehicle_configurations)
+                nexus_1.analyses  = Analyses_lf.setup(nexus_1.vehicle_configurations)
                 nexus_1.missions  = Missions.setup(nexus_1.analyses,nexus.vehicle_configurations)
                 nexus_1.procedure = Procedure.setup(nexus_1)
             if i == 2:
@@ -489,7 +459,7 @@ def setup(fidelity_method):
             print 'method route 2'
             if fidelity_method[0] == 1:
                 nexus.vehicle_configurations= Vehicles_lf.setup(nexus)
-                nexus.analyses              = Analyses_mf.setup(nexus.vehicle_configurations)
+                nexus.analyses              = Analyses_lf.setup(nexus.vehicle_configurations)
             elif fidelity_method[0] == 2:
                 nexus.vehicle_configurations= Vehicles_hf.setup(nexus)
                 nexus.analyses              = Analyses_hf.setup(nexus.vehicle_configurations)

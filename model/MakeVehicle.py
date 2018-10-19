@@ -51,7 +51,7 @@ def generate_vehicle(nexus):
 
 
     results     = s, rootChord, rcp, psl, sqc, do, tw, ttc, aero_geom, A_ref, span_vals, total_mass
-    print 'sqc : ' + str(sqc)
+#    print 'sqc : ' + str(sqc)
     return  results
 
 
@@ -72,8 +72,8 @@ def get_points(vec):
     do          = np.array(vec.do)      # dihedral outboard
     tw          = np.array(vec.tw)      # twizzle sticks
     ttc         = np.array(vec.ttc)
-    print 'rcp :' + str(rcp)
-    print 'do  :' + str(do)
+#    print 'rcp :' + str(rcp)
+#    print 'do  :' + str(do)
     dim                 = len(psl+1)        # dim of point vecs 
     
     leading_edge_points = np.zeros((dim+1,3))
@@ -262,7 +262,7 @@ def get_aero_geometry(vec, material, all_points, aerofoil, geom, payload,plot = 
     #   now add payload
     com         = coa - payload.static_margin*rootChord
     payload_com = ( com * total_mass - skin_mass * com_aero ) / payload.payload_mass
-    print 'force stab:payload com ref : ' + str(payload_com) + ' m'
+#    print 'force stab:payload com ref : ' + str(payload_com) + ' m'
     #   update total mass
 #    print 'spar mass : ' + str(spar_mass)
 #    print 'skin mass : ' + str(skin_mass)

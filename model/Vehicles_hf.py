@@ -15,7 +15,7 @@ from SUAVE.Methods.Power.Battery.Sizing import initialize_from_mass
 from SUAVE.Methods.Propulsion.electric_motor_sizing import size_from_kv
 
 from surrogate import Surrogate_Data as surrog
-from MakeVehicle_mf import generate_vehicle # med fid _ at some point need high fid
+from MakeVehicle import generate_vehicle 
 
 from SUAVE.Input_Output.OpenVSP import write
 from SUAVE.Input_Output.OpenVSP.get_vsp_areas import get_vsp_areas
