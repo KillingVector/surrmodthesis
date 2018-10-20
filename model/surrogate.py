@@ -568,7 +568,7 @@ class Surrogate_Data(Data):
 
 
     #   KRIGING - SINGLE FID
-    def single_fid_kriging(self,nexus, improve=True, plot=True):
+    def single_fid_kriging(self,nexus, improve=False):
         print "Generating kriging model ..."
         """
             single_fidelity_kriging
@@ -622,7 +622,7 @@ class Surrogate_Data(Data):
 #        print k.X
 #        print k.y
         print 'Kriging model initial setup time : ' + str(tk2 - tk1) + ' sec'
-#        k.plot()
+
 
 
         # We need to check before we update (getting an uninvertible numpy matrix :/ )
@@ -679,112 +679,6 @@ class Surrogate_Data(Data):
 
         return #k
 
-########################################################################
-########################      co - kriging      ########################
-################################ SAMPLE ################################
-
-    def ck_sample(self):
-#        print 'IN CK_SAMPLE\n\n'
-        
-        #   which models do we have?
-        if self.op.names == []:
-            if hasattr(self.op,'lf'):
-                self.op.names.append('lf')
-            if hasattr(self.op,'mf'):
-                self.op.names.append('mf')
-            if hasattr(self.op,'hf'):
-                self.op.names.append('hf')
-#        print self.op.names
-        if len(self.op.names) <= 1:
-            print 'One or fewer models present.'
-            print 'Please add another modeling fidelity level before continuing.'
-            quit()
-        #   set low and high
-        if 'hf' in self.op.names:
-            high  = self.op.hf
-            if 'mf' in self.op.names:
-                low    = self.op.mf
-                config  = 'hfmf'
-            else:
-                low     = self.op.lf
-                config  = 'hflf'
-        else:
-            high    = self.op.mf
-            low     = self.op.lf
-            config  = 'mflf'    # not using this atm
-#        print ' IN CK_SAMPLE2\n'
-        freq_exp    = self.sample_plan.exp_freq
-        N_cheap     = self.sample_plan.size
-
-        #   size expensive set
-        N_exp   = max(2,int(np.ceil(freq_exp * N_cheap)))  # round up N_exp.int
-
-        # always capture highest and lowest expensive
-#        print 'Number of expensive points : ' + str(N_exp)
-        
-        # for now, just use random selection of points
-        # need to expand a lhc 
-        self.sample_plan.lhc_type   = 'o'
-        self.sample_plan.olhc_pop   = 20
-        self.sample_plan.olhc_iter  = self.sample_plan.olhc_pop + 10
-
-        # Generate two samples
-        """
-            Should generate expensive sample and expand that 
-        """
-
-        # for now, generate low fid sample
-        self.sample_plan.lhc_lf = self.lhc_sample(low, ck=True)
-
-
-        self.evaluate_of(low,config='low')
-        inXs= np.array(self.X)
-        if np.shape(np.array(self.y))[1]==1:
-            exs = np.zeros((2,np.shape(self.sample_plan.lhc_lf)[1]))
-            exs[0,:] = inXs[np.argmax(self.y),:]
-            exs[1,:] = inXs[np.argmin(self.y),:]
-            N_exp = N_exp - 2
-        elif np.shape(np.array(self.y))[1]==2:
-            exs = np.zeros((2,np.shape(self.sample_plan.lhc_lf)[1]))
-            exs[0,:] = inXs[np.argmax(np.array(self.y)[:,0]),:]
-            exs[1,:] = inXs[np.argmin(np.array(self.y)[:,0]),:]
-            test1 = inXs[np.argmax(np.array(self.y)[:,1]),:]
-            test2 = inXs[np.argmin(np.array(self.y)[:,1]),:]
-            if not np.allclose(exs[0,:],test1) and not np.allclose(exs[1,:],test1):
-                exs = np.concatenate((exs,np.atleast_2d(test1)), axis = 0)
-            if not np.allclose(exs[0,:],test2) and not np.allclose(exs[1,:],test2):
-                exs = np.concatenate((exs,np.atleast_2d(test2)), axis = 0)
-            N_exp = N_exp - 4
-
-        # Now add more samples for any remaining N_exp
-        N_exp = 1
-        while N_exp > 0 and np.shape(exs)[0] < np.shape(inXs)[0]:
-            good_samp = False
-            # get random sample from lhc_lf
-            while not good_samp:
-                samp    = np.array(random.sample(self.sample_plan.lhc_lf, 1))
-#                print 'samp : ' + str(samp)
-                ctsamp  = 0
-                for it in exs:
-                    if np.allclose(samp,it):
-                        ctsamp = ctsamp +1
-#                print 'ctsamp : ' + str(ctsamp)
-                if ctsamp > 0:
-                    good_samp = False
-                elif ctsamp == 0:
-                    good_samp = True
-                    N_exp = N_exp - 1
-                    exs = np.concatenate((exs,samp), axis = 0)
-            
-        self.sample_plan.lhc_hf = exs
-        self.sample_plan.lhc    = self.sample_plan.lhc_lf
-
-
-#        self.sample_plan.lhc_hf = np.array(random.sample(self.sample_plan.lhc_lf, N_exp))
-
-        self.evaluate_of(high,config='high')
-        
-        return [high,low]
 
 
 ########################################################################
@@ -824,18 +718,18 @@ class Surrogate_Data(Data):
 
         config = 'lfhf'
 #        self.ck_create_sample(nexus)
-        data1 = np.genfromtxt('./results/mfhf/k20-2km25-sptp-cheap-small.csv',delimiter=',')
-        data2 = np.genfromtxt('./results/mfhf/k20-2km25-sptp-exp-small.csv',delimiter=',')
+        data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantpsw-2018-10-19 20:02:16.075104-lhc30.csv',delimiter=',')
+        data2 = np.genfromtxt('./rawresults/kriging/k2-30km2-spantpsw-lhc12x3.csv',delimiter=',')
 
-        self.X = data1[:,0:2]
+        self.X = data1[:,0:3]
         self.sample_plan.lhc = self.X
         self.sample_plan.lhc_mf = self.X
-        self.y = data1[:,2:4]
+        self.y = data1[:,3:5]
 
-        self.Xe = data2[:,0:2]
+        self.Xe = data2[:,0:3]
         self.sample_plan.lhc_hf = self.Xe
 
-        self.ye = data2[:,2:4]
+        self.ye = data2[:,3:5]
         
 
         

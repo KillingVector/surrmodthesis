@@ -103,16 +103,19 @@ def main():
 #        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
 #        t1b = datetime.datetime.now()
  
-        data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantpsw-2018-10-19 20:02:16.075104-lhc30.csv',delimiter=',')
-        data1 = data1[:,0:3]
+        data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantp-2018-10-19 19:28:32.216838.csv',delimiter=',')
+        data1 = data1[:,0:2]
 #        data2 = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
 #        surr.sample_plan.lhc = data[0:5,:]
 #        surr.sample_plan.lhc = np.array([[5.0, 0.1],[5.0, 1.0], [20.0,0.1],[20.0,1.0]]) # span taper
 #        surr.sample_plan.lhc = np.array([[5,	0.1,	0],[5,	0.1, 45],[5,	1,	0],[5,	1,	45],[20,	0.1,	0],[20,	0.1,	45],[20,	1,	0],[20,	1,	45]])
-        surr.sample_plan.lhc = data1[0:3,:]
+        surr.sample_plan.lhc = data1[0:8,:]
 
-        data2 = data1[10:17,:]
-        data3 = data1[23:31,:]
+        data2 = data1[8:16,:]
+        data3 = data1[16:24,:]
+        data4 = data1[24:30,:]
+        data5 = data1[30:36,:]
+        data6 = data1[36:44,:]
 
 
 #        print surr.sample_plan.lhc
@@ -154,23 +157,6 @@ def main():
 #        print surr.sample_plan.lhc
 #        quit()
         surr.evaluate_of(nexus)
-#        t2a = datetime.datetime.now()
-#        surr.single_fid_kriging(nexus, improve=False)
-#        k1 = kriging(data1[:,0:2],data1[:,2])
-#        k2 = kriging(data2[:,0:2],data2[:,2])
-#        k1.train()
-#        k2.train()
-
-#        k0 = surr.model0
-#        k1 = surr.model1
-#        if len(inpstr) <= 2:
-#            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
-#            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
-#        elif len(inpstr) == 3:
-#            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
-#            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
-#        saveModel(surr.model0,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod0'+'.pkl')
-#        saveModel(surr.model1,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod1'+'.pkl')
         t2b = datetime.datetime.now()
 #        quit()
         with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
@@ -184,6 +170,45 @@ def main():
                 wrc.writerow(row)
 
         surr.sample_plan.lhc = data3
+        surr.evaluate_of(nexus)
+        t2b = datetime.datetime.now()
+        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
+            wrc=csv.writer(filec)
+            for i in range(0,np.shape(surr.X)[0]):
+                row = []
+                for item in surr.X[i,:]:
+                    row.append(item)
+                row.append(surr.y[i,0])
+                row.append(surr.y[i,1])
+                wrc.writerow(row)
+
+        surr.sample_plan.lhc = data4
+        surr.evaluate_of(nexus)
+        t2b = datetime.datetime.now()
+        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
+            wrc=csv.writer(filec)
+            for i in range(0,np.shape(surr.X)[0]):
+                row = []
+                for item in surr.X[i,:]:
+                    row.append(item)
+                row.append(surr.y[i,0])
+                row.append(surr.y[i,1])
+                wrc.writerow(row)
+
+        surr.sample_plan.lhc = data5
+        surr.evaluate_of(nexus)
+        t2b = datetime.datetime.now()
+        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
+            wrc=csv.writer(filec)
+            for i in range(0,np.shape(surr.X)[0]):
+                row = []
+                for item in surr.X[i,:]:
+                    row.append(item)
+                row.append(surr.y[i,0])
+                row.append(surr.y[i,1])
+                wrc.writerow(row)
+
+        surr.sample_plan.lhc = data6
         surr.evaluate_of(nexus)
         t2b = datetime.datetime.now()
         with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
@@ -309,53 +334,92 @@ def main():
         p4  = [8., .8, 8.]
 
 
-        m10 = loadModel('../results/studies/k0-30km2-lhc10-spantpsw-surrmod0.pkl')       
-        m20 = loadModel('../results/studies/k0-30km2-spantpsw--lhc20-surrmod0.pkl')
-        m30 = loadModel('../results/studies/k0-30km2-spantpsw--lhc30-surrmod0.pkl')
-        m40 = loadModel('../results/studies/k0-30km2-spantpsw--lhc40-surrmod0.pkl')
-        m50 = loadModel('../results/studies/k0-30km2-spantpsw--lhc50-surrmod0.pkl')
+#        m10 = loadModel('../results/studies/k0-30km2-lhc10-spantpsw-surrmod0.pkl')       
+#        m20 = loadModel('../results/studies/k0-30km2-spantpsw--lhc20-surrmod0.pkl')
+#        m30 = loadModel('../results/studies/k0-30km2-spantpsw--lhc30-surrmod0.pkl')
+#        m40 = loadModel('../results/studies/k0-30km2-spantpsw--lhc40-surrmod0.pkl')
+#        m50 = loadModel('../results/studies/k0-30km2-spantpsw--lhc50-surrmod0.pkl')
 
-        optprob.inputs[:,1] = p1
-        p1o = nexus.objective()
-        optprob.inputs[:,1] = p2
-        p2o = nexus.objective()
-        optprob.inputs[:,1] = p3
-        p3o = nexus.objective()
-        optprob.inputs[:,1] = p4
-        p4o = nexus.objective()
+        d1  = np.genfromtxt('./rawresults/kriging/k2-30km2-spantpsw-lhc22x3.csv',delimiter=',')
+        d2  = np.genfromtxt('./rawresults/kriging/k2-30km2-spantpsw-lhc28x3.csv',delimiter=',')
+        dx1 = d1[:,0:3]
+        dy1 = d1[:,3:5]
+        dx2 = d2[:,0:3]
+        dy2 = d2[:,3:5]
 
+        m10 = kriging(dx1,dy1[:,0])
+        m10.train()
+        k1m = kriging(dx1,dy1[:,1])
+        m20 = kriging(dx2,dy2[:,0])
+        m20.train()
+        k2m = kriging(dx2,dy2[:,1])
+#        m10 = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc22x3.pkl')
+#        k1m = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc22x3-mass.pkl')
+#        m20 = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc28x3.pkl')
+#        k2m = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc28x3-mass.pkl')
+
+
+
+        print '\n\n Kriging model info:\n'
+        print 'For LHC size: ' + str('12,3')
+        print 'Thetas L/D : ' + str(m10.theta)
+        print 'Thetas mass: ' + str(k1m.theta)
+        print 'p L/D : ' + str(m10.pl)
+        print 'p mass: ' + str(k1m.pl)
+
+        print 'For LHC size: ' + str('18,3')
+        print 'Thetas L/D : ' + str(m20.theta)
+        print 'Thetas mass: ' + str(k2m.theta)
+        print 'p L/D : ' + str(m20.pl)
+        print 'p mass: ' + str(k2m.pl)
+
+
+#        optprob.inputs[:,1] = p1
+#        p1o = nexus.objective()
+
+#        optprob.inputs[:,1] = p2
+#        p2o = nexus.objective()
+#        optprob.inputs[:,1] = p3
+#        p3o = nexus.objective()
+
+#        optprob.inputs[:,1] = p4
+#        p4o = nexus.objective()
+#        print p4o
+#        quit()
 
         print '==='+str(p1)
-        print 'corel: ' + str(p1o)
+        print 'corel: ' + str(-8.758738709620385)
         print m10.predict(p1)
         print m20.predict(p1)
-        print m30.predict(p1)
-        print m40.predict(p1)
-        print m50.predict(p1)
-        
+#        print m30.predict(p1)
+#        print m40.predict(p1)
+#        print m50.predict(p1)
+#        
         print '==='+str(p2)
-        print 'corel: ' + str(p2o)
+        print 'corel: ' + str(-1.7228475920765616)
         print m10.predict(p2)
         print m20.predict(p2)
-        print m30.predict(p2)
-        print m40.predict(p2)
-        print m50.predict(p2)
+#        print m30.predict(p2)
+#        print m40.predict(p2)
+#        print m50.predict(p2)
 
         print '==='+str(p3)
-        print 'corel: ' + str(p3o)
+        print 'corel: ' + str(-4.1441922666)
         print m10.predict(p3)
         print m20.predict(p3)
-        print m30.predict(p3)
-        print m40.predict(p3)
-        print m50.predict(p3)
+#        print m30.predict(p3)
+#        print m40.predict(p3)
+#        print m50.predict(p3)
 
         print '==='+str(p4)
-        print 'corel: ' + str(p4o)
+        print 'corel: ' + str(-5.2278043817745)
         print m10.predict(p4)
         print m20.predict(p4)
-        print m30.predict(p4)
-        print m40.predict(p4)
-        print m50.predict(p4)
+#        print m30.predict(p4)
+#        print m40.predict(p4)
+#        print m50.predict(p4)
+
+
 
 
 
