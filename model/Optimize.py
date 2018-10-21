@@ -78,15 +78,19 @@ def main():
                 contr = 'tp'
             elif var == 'dihedral':
                 contr = 'do'
+            elif var == 'span':
+                contr = 'sp'
             else:
                 contr = var[0:2]
             inputstring = inputstring+contr
         else:
-            inputstring = var
-    savename = model_method+str(fidelity_level)+'-' +'30km'+'2-'+ inputstring+'-'
+            inputstring = inputstring+var
+    savename = model_method+str(fidelity_level)+'-' + inputstring+'-'
     print 'Files will be saved under prefix : \"' + savename +'\"'
 
     t1b = datetime.datetime.now()
+
+#    optprob.inputs[:,1] = [20., 0.05]
 #    print nexus.objective()
 #    quit()
 
@@ -95,148 +99,117 @@ def main():
 
 
 
+
     if model_method == 'k' and not from_file:
 #        a = nexus.objective()
-        surr.sample_plan.size = 40
+        surr.sample_plan.size = 50
         surr.sample_plan.lhc_type   = 'o'
         surr.sample_plan.time       = time
 #        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
 #        t1b = datetime.datetime.now()
- 
-        data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantp-2018-10-19 19:28:32.216838.csv',delimiter=',')
-        data1 = data1[:,0:2]
-#        data2 = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
-#        surr.sample_plan.lhc = data[0:5,:]
-#        surr.sample_plan.lhc = np.array([[5.0, 0.1],[5.0, 1.0], [20.0,0.1],[20.0,1.0]]) # span taper
-#        surr.sample_plan.lhc = np.array([[5,	0.1,	0],[5,	0.1, 45],[5,	1,	0],[5,	1,	45],[20,	0.1,	0],[20,	0.1,	45],[20,	1,	0],[20,	1,	45]])
-        surr.sample_plan.lhc = data1[0:8,:]
-
-        data2 = data1[8:16,:]
-        data3 = data1[16:24,:]
-        data4 = data1[24:30,:]
-        data5 = data1[30:36,:]
-        data6 = data1[36:44,:]
 
 
-#        print surr.sample_plan.lhc
-#        quit()
+        data    = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/sptp-LHC.csv',delimiter=',')
+        surr.sample_plan.lhc = data[0:6,:]
+
         surr.evaluate_of(nexus)
-        t2a = datetime.datetime.now()
 #        surr.single_fid_kriging(nexus, improve=False)
-#        k1 = kriging(data1[:,0:2],data1[:,2])
-#        k2 = kriging(data2[:,0:2],data2[:,2])
-#        k1.train()
-#        k2.train()
+#        print '\n\n Kriging model info:\n'
+#        print 'Thetas L/D : ' + str(surr.model0.theta)
+#        print 'Thetas mass: ' + str(surr.model1.theta)
+#        print 'p L/D : ' + str(surr.model0.pl)
+#        print 'p mass: ' + str(surr.model1.pl)
 
 #        k0 = surr.model0
 #        k1 = surr.model1
 #        if len(inpstr) <= 2:
 #            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
 #            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
-#        elif len(inpstr) == 3:
-#            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
-#            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
-#        saveModel(surr.model0,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod0'+'.pkl')
-#        saveModel(surr.model1,'./rawresults/kriging/'+savename+str(t2a)+'-surrmod1'+'.pkl')
+##        elif len(inpstr) == 3:
+##            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
+##            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
+#        saveModel(surr.model0,'./rawresults/kriging/'+savename+'-LD'+'.pkl')
+#        saveModel(surr.model1,'./rawresults/kriging/'+savename+'-mass'+'.pkl')
         t2b = datetime.datetime.now()
 #        quit()
-        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
-            wrc=csv.writer(filec)
+
+        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file1:
+            wr1=csv.writer(file1)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
                 for item in surr.X[i,:]:
                     row.append(item)
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
-                wrc.writerow(row)
+                wr1.writerow(row)
 
-
-
-        surr.sample_plan.lhc = data2
-
-#        print surr.sample_plan.lhc
-#        quit()
-        surr.evaluate_of(nexus)
+        surr.sample_plan.lhc = data[6:12,:]
         t2b = datetime.datetime.now()
-#        quit()
-        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
-            wrc=csv.writer(filec)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wrc.writerow(row)
-
-        surr.sample_plan.lhc = data3
         surr.evaluate_of(nexus)
-        t2b = datetime.datetime.now()
-        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
-            wrc=csv.writer(filec)
+        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file2:
+            wr2=csv.writer(file2)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
                 for item in surr.X[i,:]:
                     row.append(item)
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
-                wrc.writerow(row)
+                wr2.writerow(row)
 
-        surr.sample_plan.lhc = data4
+        surr.sample_plan.lhc = data[12:18,:]
+        t2b = datetime.datetime.now()
         surr.evaluate_of(nexus)
-        t2b = datetime.datetime.now()
-        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
-            wrc=csv.writer(filec)
+        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file3:
+            wr3=csv.writer(file3)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
                 for item in surr.X[i,:]:
                     row.append(item)
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
-                wrc.writerow(row)
+                wr3.writerow(row)
 
-        surr.sample_plan.lhc = data5
+        surr.sample_plan.lhc = data[18:24,:]
+        t2b = datetime.datetime.now()
         surr.evaluate_of(nexus)
-        t2b = datetime.datetime.now()
-        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
-            wrc=csv.writer(filec)
+        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file4:
+            wr4=csv.writer(file4)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
                 for item in surr.X[i,:]:
                     row.append(item)
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
-                wrc.writerow(row)
+                wr4.writerow(row)
 
-        surr.sample_plan.lhc = data6
+        surr.sample_plan.lhc = data[24:30,:]
+        t2b = datetime.datetime.now()
         surr.evaluate_of(nexus)
-        t2b = datetime.datetime.now()
-        with open('./rawresults/kriging/'+savename+str(t2b)+'-lhc'+str(surr.sample_plan.size)+'.csv','w+b') as filec:
-            wrc=csv.writer(filec)
+        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file5:
+            wr5=csv.writer(file5)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
                 for item in surr.X[i,:]:
                     row.append(item)
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
-                wrc.writerow(row)
+                wr5.writerow(row)
 
-
-
-
-
-
+        surr.sample_plan.lhc = data[30:np.shape(data)[0],:]
+        t2b = datetime.datetime.now()
+        surr.evaluate_of(nexus)
+        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file6:
+            wr6=csv.writer(file6)
+            for i in range(0,np.shape(surr.X)[0]):
+                row = []
+                for item in surr.X[i,:]:
+                    row.append(item)
+                row.append(surr.y[i,0])
+                row.append(surr.y[i,1])
+                wr6.writerow(row)
 
         quit()
 
-        ke = surr.model0
-        km = surr.model1
-
-#        if len(inpstr) <= 3:
-#            surr.get_plot(nexus,model=ke,zlabel='L/D',mapname='winter')#surr.modelck0)
-#            surr.get_plot(nexus,model=km,zlabel='Mass (kg)',mapname='copper')
-
-#        quit()
         t2 = datetime.datetime.now()
         iw = optimizer(nexus,'k')
 #        quit()
@@ -454,11 +427,11 @@ def base_design():
 
     # make sizing vectors
     vec.psl             = np.array([0.])#, pl_psl])#, 0.5])
-    vec.sqc             = np.array([30.])#, 5.])#, 10.])
+    vec.sqc             = np.array([30.])#30.])#, 5.])#, 10.])
     vec.rcp             = np.array([1., .4])#, .4])#, .1]) #rcp[-1] tip chord
     vec.ttc             = np.array([pl_ttc, 0.2])#, 0.1])#, .08]) # thickness
-    vec.do              = np.array([5.])#, 0.])#, 0.])
-    vec.tw              = np.array([0.,-3.]) # tip twist only, root always 0 for flying wing
+    vec.do              = np.array([0.])#, 0.])#, 0.])
+    vec.tw              = np.array([0.,0.]) # tip twist only, root always 0 for flying wing
     vec.num_seg         = len(vec.psl)
     
 
@@ -511,7 +484,7 @@ def setup(fidelity_method):
             [ 'span'       ,   vec.span, (  2*vec.root_chord,   20.0 ),  1.0, Units.less],
 #    #        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
             [ 'rcp_tip' ,  vec.rcp[-1], (  0.05,    1.0 ),  1.0, Units.less    ],  
-            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
+#            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
 #            [ 'dihedral' ,  vec.do[0] , ( -5.0,    5.0 ),  1.0, Units.degrees ],
 #            [ 'twist_tip' ,  vec.tw[-1], ( -5.0,    5.0 ),1.0, Units.degrees  ],
         ])

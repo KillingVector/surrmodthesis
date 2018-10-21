@@ -57,7 +57,7 @@ def base(vehicle):
     aerodynamics = SUAVE.Analyses.Aerodynamics.SU2_Euler()
     aerodynamics.geometry = vehicle
 
-    aerodynamics.process.compute.lift.inviscid.settings.maximum_iterations = 10
+    aerodynamics.process.compute.lift.inviscid.settings.maximum_iterations = 15 # cauchy conv criteria
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     
     aerodynamics.process.compute.lift.inviscid.training.Mach               = np.array([.2, .4, .65, .75]) 

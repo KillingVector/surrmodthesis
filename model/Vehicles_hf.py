@@ -125,7 +125,7 @@ def base_setup(nexus):
             segment.append_airfoil(airfoil)
             wing.Segments.append(segment)  
     
-    print wing
+#    print wing
     # add to vehicle
     vehicle.append_component(wing)
     

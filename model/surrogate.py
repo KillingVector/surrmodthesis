@@ -961,6 +961,7 @@ class Surrogate_Data(Data):
         ax.set_xlabel(namelist[0])
         ax.set_ylabel(namelist[1])
         ax.set_zlabel(zlabel)
+        ax.set_aspect('auto')
         plt.show()
 
         if not model1 == None:
@@ -981,6 +982,7 @@ class Surrogate_Data(Data):
             ax1.set_xlabel(namelist[0])
             ax1.set_ylabel(namelist[1])
             ax1.set_zlabel(zlabel)
+            ax1.set_aspect('auto')
             plt.show()
             print diff
             fig2 = plt.figure()
@@ -989,6 +991,7 @@ class Surrogate_Data(Data):
             ax2.set_xlabel(namelist[0])
             ax2.set_ylabel(namelist[1])
             ax2.set_zlabel(zlabel)
+            ax2.set_aspect('auto')
             plt.show()
 
             fig3 = plt.figure()
@@ -998,6 +1001,7 @@ class Surrogate_Data(Data):
             ax3.set_xlabel(namelist[0])
             ax3.set_ylabel(namelist[1])
             ax3.set_zlabel(zlabel)
+            ax3.set_aspect('auto')
             plt.show()
 
 
