@@ -110,9 +110,9 @@ def main():
 
 
         data    = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/sptp-LHC.csv',delimiter=',')
-        surr.sample_plan.lhc = data[0:6,:]
+#        surr.sample_plan.lhc = data[0:6,:]
 
-        surr.evaluate_of(nexus)
+#        surr.evaluate_of(nexus)
 #        surr.single_fid_kriging(nexus, improve=False)
 #        print '\n\n Kriging model info:\n'
 #        print 'Thetas L/D : ' + str(surr.model0.theta)
@@ -133,54 +133,20 @@ def main():
         t2b = datetime.datetime.now()
 #        quit()
 
-        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file1:
-            wr1=csv.writer(file1)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr1.writerow(row)
 
-        surr.sample_plan.lhc = data[6:12,:]
-        t2b = datetime.datetime.now()
-        surr.evaluate_of(nexus)
-        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file2:
-            wr2=csv.writer(file2)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr2.writerow(row)
 
-        surr.sample_plan.lhc = data[12:18,:]
-        t2b = datetime.datetime.now()
-        surr.evaluate_of(nexus)
-        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file3:
-            wr3=csv.writer(file3)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr3.writerow(row)
-
-        surr.sample_plan.lhc = data[18:24,:]
-        t2b = datetime.datetime.now()
-        surr.evaluate_of(nexus)
-        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file4:
-            wr4=csv.writer(file4)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr4.writerow(row)
+#        surr.sample_plan.lhc = data[18:24,:]
+#        t2b = datetime.datetime.now()
+#        surr.evaluate_of(nexus)
+#        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file4:
+#            wr4=csv.writer(file4)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr4.writerow(row)
 
         surr.sample_plan.lhc = data[24:30,:]
         t2b = datetime.datetime.now()
