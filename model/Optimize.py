@@ -50,7 +50,7 @@ def main():
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
     fidelity_level  = 2 # 0 or 2 atm.
     # MODEL METHOD
-    model_method    = 'k'  # k or ck
+    model_method    = 'ck'  # k or ck
     # ALLOWED TIME (s) 
     hours           = 1.
     mins            = 30.
@@ -90,9 +90,7 @@ def main():
 
     t1b = datetime.datetime.now()
 
-#    optprob.inputs[:,1] = [4.28, 0.05]
-    print nexus.objective()
-    quit()
+
 
 
 
@@ -212,16 +210,16 @@ def main():
 
         # surr.load_ck() # no .pkl
         # surr.model999 = loadModel() # pykriging built, need .pkl
-        surr.load_ck('./results/lfhf/k20ck2-2km25-spantp-cokriging-verysmall')
-        datac = np.genfromtxt('./results/lfhf/k20-2km25-sptp-cheap-verysmall.csv',delimiter=',')
-        datae = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp-verysmall.csv',delimiter=',')
+        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantp-')
+        datac = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-sptp-X-y.csv',delimiter=',')
+        datae = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-ySML.csv',delimiter=',')
 #        datae = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
 #        k1 = loadModel('./krigingres/avl/k1-2km25-spantp-surrmod0.pkl')
 #        print k0.theta
 #        print k1.theta
         ck0 = surr.modelck0
-#        k0 = kriging(datac[:,0:2],datac[:,2])
-#        k0.train()
+        k0 = kriging(datac[:,0:2],datac[:,2])
+        k0.train()
 #        km = kriging(datac[:,0:2],datac[:,3])
 #        km.train()
 #        saveModel(km,'./results/lfhf/k20ck2-2km25-spantp-cokriging-verysmall.pkl')
@@ -230,13 +228,14 @@ def main():
         k1.train()
 #        surr.model1 = k1
         t2 = datetime.datetime.now()
-        a = ck0.predict([7.8,0.38])
-        b = k1.predict([7.8,0.38])
+#        a = ck0.predict([7.8,0.38])
+#        b = k1.predict([7.8,0.38])
 
 #        surr.get_plot(nexus,model=ck0,zlabel='L/D',mapname='winter')
         iw = optimizer(nexus,'k')
 #        if len(inpstr) <= 2:
-        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 ##            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D')
 ##            surr.get_plot(nexus,model=ke,model1=surr.modelck0,zlabel='L/D')
 #        elif len(inpstr) <= 3:

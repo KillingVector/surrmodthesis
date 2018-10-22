@@ -718,18 +718,18 @@ class Surrogate_Data(Data):
 
         config = 'lfhf'
 #        self.ck_create_sample(nexus)
-        data1 = np.genfromtxt('./rawresults/kriging/k0-30km2-spantpsw-2018-10-19 20:02:16.075104-lhc30.csv',delimiter=',')
-        data2 = np.genfromtxt('./rawresults/kriging/k2-30km2-spantpsw-lhc12x3.csv',delimiter=',')
+        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
+        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-11x3.csv',delimiter=',')
 
-        self.X = data1[:,0:3]
+        self.X = data1[:,0:2]
         self.sample_plan.lhc = self.X
         self.sample_plan.lhc_mf = self.X
-        self.y = data1[:,3:5]
+        self.y = data1[:,2:4]
 
-        self.Xe = data2[:,0:3]
+        self.Xe = data2[:,0:2]
         self.sample_plan.lhc_hf = self.Xe
 
-        self.ye = data2[:,3:5]
+        self.ye = data2[:,2:4]
         
 
         
