@@ -22,13 +22,13 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 #[cand10,gen10] = loadModel('k0-30km2-lhc10-spantpsw-_optcands_generations.pkl')
 #[cand20,gen20] = loadModel('k0-30km2-spantpsw--lhc20_optcands_generations.pkl')
-#[cand30,gen30] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-spantpsw-(37, 3)_optcands_generations.pkl')
+[cand30,gen30] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-spantpsw-(37, 3)_optcands_generations.pkl')
 #[cand40,gen40] = loadModel('k0-30km2-spantpsw--lhc40_optcands_generations.pkl')
 #[cand50,gen50] = loadModel('k0-30km2-spantpsw--lhc50_optcands_generations.pkl')
 
 #dat10 = np.array(gen10[-1])
 #dat20 = np.array(gen20[-1])
-#dat30 = np.array(gen30[-1])
+dat30 = np.array(gen30[-1])
 #dat40 = np.array(gen40[-1])
 #dat50 = np.array(gen50[-1])
 
@@ -64,13 +64,13 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 #[cand20,gen20] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(22, 3)_optcands_generations.pkl')
 #[cand30,gen30] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(27, 3)_optcands_generations.pkl')
 #[cand40,gen40] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(32, 3)_optcands_generations.pkl')
-#[cand50,gen50] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(37, 3)_optcands_generations.pkl')
+[cand50,gen50] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(37, 3)_optcands_generations.pkl')
 
 #dat10 = np.array(gen10[-1])
 #dat20 = np.array(gen20[-1])
 #dat30 = np.array(gen30[-1])
 #dat40 = np.array(gen40[-1])
-#dat50 = np.array(gen50[-1])
+dat50 = np.array(gen50[-1])
 
 #dat = [dat10,dat20,dat30,dat40,dat50]
 #num = ['17','22','27','32','37']
@@ -100,8 +100,28 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 #ax.set_ylabel('Mass (kg)')
 #plt.show()
 
+fig,ax = plt.subplots()
+ax.grid()
+ax.set_axisbelow(True)
+ax.yaxis.grid(color='gray', linestyle='dashed')
+ax.xaxis.grid(color='gray', linestyle='dashed')
+
+xlf = -dat30[:,0]
+ylf = dat30[:,1]
+
+xhf  = -dat50[:,0]
+yhf  = dat50[:,1]
+sc=ax.scatter(xhf,yhf,marker='o',c='r',s=12,alpha=1.,label='SU2')
+sc=ax.scatter(xlf,ylf,marker='o',c='b',s=12,alpha=1.,label='Correlation')
+
+ax.set_title('Pareto-front')
+ax.set_xlabel('L/D')
+ax.set_ylabel('Mass (kg)')
+plt.legend()
+plt.show()
 
 
+quit()
 thlhc   = [10,20,30,40,50]
 th = np.array([[0.70111245, 0.0289625,  0.18313701],
 [2.88390519, 0.02561265, 0.27699442],
