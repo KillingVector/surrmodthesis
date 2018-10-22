@@ -48,7 +48,7 @@ def main():
     '''    Modify these values to choose fidelity level
         and modeling method    '''
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
-    fidelity_level  = 0 # 0 or 2 atm.
+    fidelity_level  = 2 # 0 or 2 atm.
     # MODEL METHOD
     model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
@@ -91,8 +91,8 @@ def main():
     t1b = datetime.datetime.now()
 
 #    optprob.inputs[:,1] = [4.28, 0.05]
-#    print nexus.objective()
-#    quit()
+    print nexus.objective()
+    quit()
 
 
 
@@ -110,12 +110,12 @@ def main():
 
 
         data    = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y.csv',delimiter=',')
-#        surr.sample_plan.lhc = data
+        surr.sample_plan.lhc = data[:,0:3]
 
-#        surr.evaluate_of(nexus)
+        surr.evaluate_of(nexus)
 
-        surr.X = data[:,0:3]
-        surr.y = data[:,3:5]
+#        surr.X = data[:,0:3]
+#        surr.y = data[:,3:5]
 
 
         surr.single_fid_kriging(nexus, improve=False)
@@ -338,7 +338,7 @@ def base_design():
     # vehicle dats (:
     vec             = Data()
 
-    vec.span            = 6.5
+    vec.span            = 4.2839836611#6.5
     vec.root_chord      = 2.14
 
     # size payload (max)
@@ -357,8 +357,8 @@ def base_design():
 
     # make sizing vectors
     vec.psl             = np.array([0.])#, pl_psl])#, 0.5])
-    vec.sqc             = np.array([30.])#30.])#, 5.])#, 10.])
-    vec.rcp             = np.array([1., .4])#, .4])#, .1]) #rcp[-1] tip chord
+    vec.sqc             = np.array([44.7164859339])#30.])#, 5.])#, 10.])
+    vec.rcp             = np.array([1., 0.0500172411036657])#, .4])#, .1]) #rcp[-1] tip chord
     vec.ttc             = np.array([pl_ttc, 0.2])#, 0.1])#, .08]) # thickness
     vec.do              = np.array([0.])#, 0.])#, 0.])
     vec.tw              = np.array([0.,0.]) # tip twist only, root always 0 for flying wing
