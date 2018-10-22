@@ -340,10 +340,10 @@ class inspyred_wrapper(Data):
         div = 100
         lengen  = len(self.storegens)        
         num     = int(lengen / div)
-        print num
-        print lengen
+#        print num
+#        print lengen
         i = 0
-        print self.storegens
+#        print self.storegens
         while i < len(self.storegens):
             gens.append(self.storegens[i])
             i = i + num

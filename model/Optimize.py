@@ -48,7 +48,7 @@ def main():
     '''    Modify these values to choose fidelity level
         and modeling method    '''
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
-    fidelity_level  = 2 # 0 or 2 atm.
+    fidelity_level  = 0 # 0 or 2 atm.
     # MODEL METHOD
     model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
@@ -90,7 +90,7 @@ def main():
 
     t1b = datetime.datetime.now()
 
-#    optprob.inputs[:,1] = [20., 0.05]
+#    optprob.inputs[:,1] = [4.28, 0.05]
 #    print nexus.objective()
 #    quit()
 
@@ -109,36 +109,43 @@ def main():
 #        t1b = datetime.datetime.now()
 
 
-        data    = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/sptp-LHC.csv',delimiter=',')
-#        surr.sample_plan.lhc = data[0:6,:]
+        data    = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y.csv',delimiter=',')
+#        surr.sample_plan.lhc = data
 
 #        surr.evaluate_of(nexus)
-#        surr.single_fid_kriging(nexus, improve=False)
-#        print '\n\n Kriging model info:\n'
-#        print 'Thetas L/D : ' + str(surr.model0.theta)
-#        print 'Thetas mass: ' + str(surr.model1.theta)
-#        print 'p L/D : ' + str(surr.model0.pl)
-#        print 'p mass: ' + str(surr.model1.pl)
 
-#        k0 = surr.model0
-#        k1 = surr.model1
+        surr.X = data[:,0:3]
+        surr.y = data[:,3:5]
+
+
+        surr.single_fid_kriging(nexus, improve=False)
+
+        print '\n\n Kriging model info:\n'
+        print 'Thetas L/D : ' + str(surr.model0.theta)
+        print 'Thetas mass: ' + str(surr.model1.theta)
+        print 'p L/D : ' + str(surr.model0.pl)
+        print 'p mass: ' + str(surr.model1.pl)
+
+        k0 = surr.model0
+#        if k0.pl[0] < 1.5:
+#            print 'cor1'
+#            k0.pl[0] = 2.
+#        elif k0.pl[1] < 1.5:
+#            print 'cor2'
+#            k0.pl[1] = 2.
+
+        k1 = surr.model1
 #        if len(inpstr) <= 2:
 #            surr.get_plot(nexus,model = k0,zlabel='L/D',mapname='winter')
-#            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
-##        elif len(inpstr) == 3:
-##            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
+##            surr.get_plot(nexus,model = k1,zlabel='Mass(kg)',mapname='copper')
+#        elif len(inpstr) == 3:
+#            surr.get_plot3X(nexus,model=k1,zlabel='L/D',mapname='winter')
 ##            surr.get_plot3X(nexus,model=k2,zlabel='Mass (kg)',mapname='copper')
-#        saveModel(surr.model0,'./rawresults/kriging/'+savename+'-LD'+'.pkl')
-#        saveModel(surr.model1,'./rawresults/kriging/'+savename+'-mass'+'.pkl')
+        saveModel(surr.model0,'./rawresults/kriging/'+savename+str(np.shape(surr.X))+'-LD'+'.pkl')
+        saveModel(surr.model1,'./rawresults/kriging/'+savename+str(np.shape(surr.X))+'-mass'+'.pkl')
         t2b = datetime.datetime.now()
-#        quit()
 
-
-
-#        surr.sample_plan.lhc = data[18:24,:]
-#        t2b = datetime.datetime.now()
-#        surr.evaluate_of(nexus)
-#        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file4:
+#        with open('./rawresults/kriging/'+savename+'X-y'+'.csv','w+b') as file4:
 #            wr4=csv.writer(file4)
 #            for i in range(0,np.shape(surr.X)[0]):
 #                row = []
@@ -148,33 +155,9 @@ def main():
 #                row.append(surr.y[i,1])
 #                wr4.writerow(row)
 
-        surr.sample_plan.lhc = data[24:30,:]
-        t2b = datetime.datetime.now()
-        surr.evaluate_of(nexus)
-        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file5:
-            wr5=csv.writer(file5)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr5.writerow(row)
 
-        surr.sample_plan.lhc = data[30:np.shape(data)[0],:]
-        t2b = datetime.datetime.now()
-        surr.evaluate_of(nexus)
-        with open('./rawresults/kriging/'+savename+'X-y'+str(t2b)+'.csv','w+b') as file6:
-            wr6=csv.writer(file6)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr6.writerow(row)
 
-        quit()
+#        quit()
 
         t2 = datetime.datetime.now()
         iw = optimizer(nexus,'k')
@@ -183,7 +166,7 @@ def main():
         t3 = datetime.datetime.now()
         iw.show_results(title='Pareto-front')
         iw.show_gen_results()
-        iw.save_results(name = './rawresults/kriging/'+savename+'-lhc'+str(surr.sample_plan.size)+'_opt')
+        iw.save_results(name = './rawresults/kriging/'+savename+str(np.shape(surr.X))+'_opt')
 
 
         print 'For LHC size: ' + str(np.shape(surr.X))
@@ -273,32 +256,13 @@ def main():
         p4  = [8., .8, 8.]
 
 
-#        m10 = loadModel('../results/studies/k0-30km2-lhc10-spantpsw-surrmod0.pkl')       
-#        m20 = loadModel('../results/studies/k0-30km2-spantpsw--lhc20-surrmod0.pkl')
-#        m30 = loadModel('../results/studies/k0-30km2-spantpsw--lhc30-surrmod0.pkl')
-#        m40 = loadModel('../results/studies/k0-30km2-spantpsw--lhc40-surrmod0.pkl')
-#        m50 = loadModel('../results/studies/k0-30km2-spantpsw--lhc50-surrmod0.pkl')
-
-        d1  = np.genfromtxt('./rawresults/kriging/k2-30km2-spantpsw-lhc22x3.csv',delimiter=',')
-        d2  = np.genfromtxt('./rawresults/kriging/k2-30km2-spantpsw-lhc28x3.csv',delimiter=',')
-        dx1 = d1[:,0:3]
-        dy1 = d1[:,3:5]
-        dx2 = d2[:,0:3]
-        dy2 = d2[:,3:5]
-
-        m10 = kriging(dx1,dy1[:,0])
-        m10.train()
-        k1m = kriging(dx1,dy1[:,1])
-        m20 = kriging(dx2,dy2[:,0])
-        m20.train()
-        k2m = kriging(dx2,dy2[:,1])
-#        m10 = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc22x3.pkl')
-#        k1m = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc22x3-mass.pkl')
-#        m20 = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc28x3.pkl')
-#        k2m = loadModel('./rawresults/kriging/k2-30km2-spantpsw-lhc28x3-mass.pkl')
+        
 
 
 
+
+
+        quit()
         print '\n\n Kriging model info:\n'
         print 'For LHC size: ' + str('12,3')
         print 'Thetas L/D : ' + str(m10.theta)
@@ -450,7 +414,7 @@ def setup(fidelity_method):
             [ 'span'       ,   vec.span, (  2*vec.root_chord,   20.0 ),  1.0, Units.less],
 #    #        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
             [ 'rcp_tip' ,  vec.rcp[-1], (  0.05,    1.0 ),  1.0, Units.less    ],  
-#            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
+            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
 #            [ 'dihedral' ,  vec.do[0] , ( -5.0,    5.0 ),  1.0, Units.degrees ],
 #            [ 'twist_tip' ,  vec.tw[-1], ( -5.0,    5.0 ),1.0, Units.degrees  ],
         ])
