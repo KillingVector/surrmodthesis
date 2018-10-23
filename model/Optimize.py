@@ -58,7 +58,7 @@ def main():
     time            = hours*60*60 + mins*60 + secs
     # 
     fidelity_method = [fidelity_level, model_method]
-    from_file = False
+    from_file = True
     
     nexus = setup(fidelity_method)
     optprob = nexus.optimization_problem
@@ -207,41 +207,43 @@ def main():
 
         # surr.load_ck() # no .pkl
         # surr.model999 = loadModel() # pykriging built, need .pkl
-        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantp-')
-        datac = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-sptp-X-y.csv',delimiter=',')
-        datae = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-ySML.csv',delimiter=',')
-#        datae = np.genfromtxt('./results/lfhf/k20-2km25-sptp-exp.csv',delimiter=',')
-#        k1 = loadModel('./krigingres/avl/k1-2km25-spantp-surrmod0.pkl')
-#        print k0.theta
-#        print k1.theta
+        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-(9, 3)')
+#        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-')
+#        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-(17, 3)')
+        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
+        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-9x3.csv',delimiter=',')
+#        surr.model0 = kriging(data1[:,0:3],data1[:,4])
+#        surr.model0.train()
         ck0 = surr.modelck0
-        k0 = kriging(datac[:,0:2],datac[:,2])
-        k0.train()
-#        km = kriging(datac[:,0:2],datac[:,3])
-#        km.train()
-#        saveModel(km,'./results/lfhf/k20ck2-2km25-spantp-cokriging-verysmall.pkl')
-#        surr.model0 = k0
-        k1 = kriging(datae[:,0:2],datae[:,2])
-        k1.train()
+#        print ck0.predict([4.28,0.05,45])
+#        print ck0.predict([13.45,0.065,5.25])
+        print surr.model0.predict([20., 0.05, 45.])
+
+        
+        
+#        k0 = kriging(datac[:,0:2],datac[:,2])
+#        k0.train()
+
+#        k1 = kriging(datae[:,0:2],datae[:,2])
+#        k1.train()
 #        surr.model1 = k1
         t2 = datetime.datetime.now()
 #        a = ck0.predict([7.8,0.38])
 #        b = k1.predict([7.8,0.38])
 
 #        surr.get_plot(nexus,model=ck0,zlabel='L/D',mapname='winter')
-        iw = optimizer(nexus,'k')
-#        if len(inpstr) <= 2:
-        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
-        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
+        iw = optimizer(nexus,'ck')
+        if len(inpstr) <= 2:
+            surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 ##            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D')
 ##            surr.get_plot(nexus,model=ke,model1=surr.modelck0,zlabel='L/D')
-#        elif len(inpstr) <= 3:
-#            surr.get_plot3X(nexus,model=k, model1=surr.modelck0)
-        quit()
+
+#        quit()
         iw.evolve()
-        iw.show_results(title='')
-        iw.show_gen_results()
-        iw.save_results(name = './rawresults/cokriging/ck2-30km2-'+inputstring)
+#        iw.show_results(title='')
+#        iw.show_gen_results()
+        iw.save_results(name = './rawresults/cokriging/ck2-'+inputstring+str(np.shape(ck0.Xe)))
 
 ######################### FROM FILE
     elif model_method == 'k' and from_file:

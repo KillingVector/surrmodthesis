@@ -66,10 +66,12 @@ class inspyred_wrapper(Data):
         elif obj.lower() in ['ck','cokrig','co-krige','co-kriging','co kriging','cokriging','cok']:
             if not surr.modelck0 == None:
                 self.function_1     = surr.modelck0.predict
+                print 'cokrig!'
             else:
                 self.function_1     = None
             if not surr.model0 == None:
                 self.function_2     = surr.model0.predict
+                print 'model0'
             elif not surr.model1 == None:
                 self.function_2     = surr.model1.predict
             else:

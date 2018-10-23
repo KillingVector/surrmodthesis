@@ -1056,10 +1056,12 @@ class Surrogate_Data(Data):
         x1, x2, x3 = np.meshgrid(lx1,lx2,lx3)
         
         gen = np.zeros(np.shape(x1))
+        print x1
 
         for i in range(0,np.shape(x1)[0]): #x1
             for j in range(0,np.shape(x2)[1]): #x2
                 point = [x1[i,j],x2[i,j],x3[i,j]]
+                print point
                 gen[i,j] = model.predict(point)
         print gen
 
