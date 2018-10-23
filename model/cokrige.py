@@ -82,7 +82,7 @@ class cokriging(matrixops):
 
 
             matrixops.__init__(self)
-            self.updateData()
+            self.updateDifferenceVector()
 
         print 'Co-kriging init complete' 
 
@@ -367,6 +367,8 @@ class cokriging(matrixops):
         print 'init rho : ' + str(self.rho)
         # First make sure our data is up-to-date
         self.updateData()
+        print 'RIGHT BEFORE'
+        self.updateModel()
         self.train_indiv(dataset = 'c', optimizer=optimiser)
         self.train_indiv(dataset = 'd', optimizer=optimiser)
         self.updatePsi()

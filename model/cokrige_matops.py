@@ -4,6 +4,7 @@
 import numpy as np
 from numpy.matlib import rand,zeros,ones,empty,eye
 import scipy
+import datetime
 
 
 class matrixops():
@@ -35,9 +36,11 @@ class matrixops():
 
         # update distances
     def updateData(self):
+        print 'Update data'
         #   Difference Vector
         self.updateDifferenceVector()
         # cheap
+
         self.distanceXc = np.zeros((self.nc,self.nc, self.kc))
         for i in range( self.nc ):
             for j in range(i+1,self.nc):
@@ -57,6 +60,7 @@ class matrixops():
             for j in range(self.ne):
                 self.distanceXcXe[i][j]=np.abs((self.Xc[i,:]-self.Xe[j,:]))
 #        quit()
+
 
 
     #   this creates the distance vector d
@@ -84,13 +88,20 @@ class matrixops():
 
         fillxc=[]
         fillyc=[]
-
+        print 'before for loop'
         ct1 = 0
         ct2 = 0
         ct3 = 0
+        print self.Xc
         for j in range(0,np.shape(self.Xc)[0]):
+            if j > np.shape(self.Xc)[0]:
+                print j
+                print np.shape(self.Xc)
+                break
             entry = self.Xc[j,:]
             present = False
+            print 'entry number : ' + str(j)
+            print entry
             for i in range(0,np.shape(self.Xe)[0]):
                 test    = self.Xe[i,:]
                 dist    = np.absolute(np.linalg.norm(entry - test))
@@ -101,6 +112,7 @@ class matrixops():
 #                if dist < tol2:
                 if np.allclose(entry,test):
                     if np.absolute(test[0] - entry[0]) < tol1:
+
                         xe.append(test.tolist())
                         ye.append(self.ye[i,0].tolist())
                         xc.append(entry.tolist())
@@ -115,6 +127,8 @@ class matrixops():
                 fillyc.append(self.yc[j,0].tolist())
 
 
+        print 'after for loop'
+        print np.shape(self.Xc)
         xc  = np.atleast_2d(np.array(xc))
         fillxc = np.atleast_2d(np.array(fillxc))
         yc  = np.atleast_2d(np.array(yc)).T
@@ -124,6 +138,8 @@ class matrixops():
         yc  = np.concatenate((yc,fillyc),axis=0)
 #        print yc
 #        quit()
+        print 'check = '+str(np.shape(xc))
+        print 'check = '+str(np.shape(xe))
 
         # reallocate back to original arrays
         self.Xe = np.array(xe)
@@ -167,6 +183,7 @@ class matrixops():
 
     #   Psi_c(Xc,Xc)
     def updatePsicXc(self):
+        print 'Update: PsicXc'
         # unpack data
         Xc      = self.Xc
         yc      = self.yc
@@ -197,6 +214,7 @@ class matrixops():
 
     #   Psi_d(Xe,Xe)
     def updatePsidXe(self):
+        print 'Update: PsidXe'
         # unpack data
         Xe      = self.Xe
         ye      = self.ye
@@ -234,6 +252,7 @@ class matrixops():
 
     #   Psi_c(Xe,Xe)
     def updatePsicXe(self):
+        print 'Update: PsicXe'
         # unpack data
         Xe      = self.Xe
         ye      = self.ye
@@ -263,6 +282,7 @@ class matrixops():
 
     #   Psi_c(Xc,Xe) and Psi_c(Xe,Xc)
     def updatePsicXcXe(self):
+        print 'Update: PsicXcXe'
         Xe      = self.Xe
         Xc      = self.Xc
         thetac  = self.thetac
@@ -294,6 +314,7 @@ class matrixops():
 
     #   CHEAP LIKELIHOOD
     def neglikelihoodc(self): # based on likelihoodc.m
+        print 'C : ' + str(datetime.datetime.now())
         Xc      = self.Xc
         yc      = self.yc
         nc      = self.nc
@@ -351,6 +372,7 @@ class matrixops():
 
     #   DIFF LIKELIHOOD
     def neglikelihoodd(self): # based on likelihoodd.m
+        print 'D : ' + str(datetime.datetime.now())
         Xe      = self.Xe
         ye      = self.ye
         yc      = self.yc

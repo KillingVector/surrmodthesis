@@ -90,11 +90,8 @@ def main():
 
     t1b = datetime.datetime.now()
 
-
-
-
-
-
+    
+##########################################################################
 
 
 
@@ -254,11 +251,15 @@ def main():
         p3  = [17., .2, 47.]
         p4  = [8., .8, 8.]
 
+        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-rcp_tipsw--LD.pkl')
+        km = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-rcp_tipsw--mass.pkl')
 
-        
+        surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')#model1=k1,
+#        surr.get_plot(nexus,model=km,zlabel='Mass (kg)',mapname='copper')        
 
-
-
+        quit()
+        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 
 
         quit()
@@ -337,7 +338,7 @@ def base_design():
     # vehicle dats (:
     vec             = Data()
 
-    vec.span            = 4.2839836611#6.5
+    vec.span            = 7.03847301741048#6.5
     vec.root_chord      = 2.14
 
     # size payload (max)
@@ -356,8 +357,8 @@ def base_design():
 
     # make sizing vectors
     vec.psl             = np.array([0.])#, pl_psl])#, 0.5])
-    vec.sqc             = np.array([44.7164859339])#30.])#, 5.])#, 10.])
-    vec.rcp             = np.array([1., 0.0500172411036657])#, .4])#, .1]) #rcp[-1] tip chord
+    vec.sqc             = np.array([44.7683140206715])#30.])#, 5.])#, 10.])
+    vec.rcp             = np.array([1., 0.0512270209458842])#, .4])#, .1]) #rcp[-1] tip chord
     vec.ttc             = np.array([pl_ttc, 0.2])#, 0.1])#, .08]) # thickness
     vec.do              = np.array([0.])#, 0.])#, 0.])
     vec.tw              = np.array([0.,0.]) # tip twist only, root always 0 for flying wing

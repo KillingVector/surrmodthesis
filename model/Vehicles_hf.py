@@ -223,7 +223,7 @@ def configs_setup_hf(vehicle):
     configs.append(base_config)
 
     write(vehicle, base_config.tag)
-
+#    quit()
 #    print vehicle
 
     return configs

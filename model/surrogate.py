@@ -719,17 +719,17 @@ class Surrogate_Data(Data):
         config = 'lfhf'
 #        self.ck_create_sample(nexus)
         data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
-        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-11x3.csv',delimiter=',')
+        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-9x3.csv',delimiter=',')
 
-        self.X = data1[:,0:2]
+        self.X = data1[:,0:3]
         self.sample_plan.lhc = self.X
         self.sample_plan.lhc_mf = self.X
-        self.y = data1[:,2:4]
+        self.y = data1[:,3:5]
 
-        self.Xe = data2[:,0:2]
+        self.Xe = data2[:,0:3]
         self.sample_plan.lhc_hf = self.Xe
 
-        self.ye = data2[:,2:4]
+        self.ye = data2[:,3:5]
         
 
         
@@ -782,14 +782,16 @@ class Surrogate_Data(Data):
         else:
             X_exp  = self.Xe
 
-        print 'Building and training mass model'
-        masskrig        = kriging(X_cheap,yc[:,1])
-        masskrig.train()
-        self.model0     = masskrig
-            #   SAVE MODEL
-        saveModel(self.model0,filename+'mass.pkl')
+        print 'assuming mass model saved'
+#        print 'Building and training mass model'
+#        masskrig        = kriging(X_cheap,yc[:,1])
+#        masskrig.train()
+#        self.model0     = masskrig
+#            #   SAVE MODEL
+#        saveModel(self.model0,filename+'mass.pkl')
 
         #   this co-kriges the L/D data
+        print X_cheap
         print 'Building and training model 1'
         ck0     = ckrig(X_cheap, yc[:,0], X_exp, ye[:,0])
         ck0.co_trainer()
@@ -799,8 +801,8 @@ class Surrogate_Data(Data):
 
         self.modelck0   = ck0
             #   SAVE MODEL
-        self.modelck0.save_ck_model(filename)
-
+        self.modelck0.save_ck_model(filename+str(np.shape(X_exp)))
+        '''
         Xck = self.scale_points(self.model0.X,nexus)
             #   make l/d model for comparison
         kld = kriging(X_cheap,yc[:,0])
@@ -822,7 +824,7 @@ class Surrogate_Data(Data):
                     'do nothing'
                 wr.writerow(row)
 
-
+        '''
         return thetime  # means get_ck_plot can be called outside this funct
 
 
