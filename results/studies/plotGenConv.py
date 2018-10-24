@@ -20,14 +20,14 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 
 
-#[cand10,gen10] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantpsw(9, 3)cands_generations.pkl')
-#[cand20,gen20] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantpsw(11, 3)cands_generations.pkl')
-[cand30,gen30] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/aaSPTP-k0-spantpcands_generations.pkl')
-[cand40,gen40] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/aaSPTP-ck0-spantpcands_generations.pkl')
+[cand10,gen10] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantpsw(9, 3)cands_generations.pkl')
+[cand20,gen20] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantpsw(11, 3)cands_generations.pkl')
+[cand30,gen30] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k0-30km2-spantpsw--lhc30_optcands_generations.pkl')
+[cand40,gen40] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantpsw(17, 3)cands_generations.pkl')
 #[cand50,gen50] = loadModel('k0-30km2-spantpsw--lhc50_optcands_generations.pkl')
 
-#datck9 = np.array(gen10[-1])
-#datck11 = np.array(gen20[-1])
+datck9 = np.array(gen10[-1])
+datck11 = np.array(gen20[-1])
 dat30 = np.array(gen30[-1])
 datck17 = np.array(gen40[-1])
 #dat50 = np.array(gen50[-1])
@@ -64,7 +64,7 @@ datck17 = np.array(gen40[-1])
 #[cand20,gen20] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(22, 3)_optcands_generations.pkl')
 #[cand30,gen30] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(27, 3)_optcands_generations.pkl')
 #[cand40,gen40] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(32, 3)_optcands_generations.pkl')
-[cand50,gen50] = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/aaSPTP-k2-spantpcands_generations.pkl')
+[cand50,gen50] = loadModel('/home/ashaiden/Documents/surrmodthesis/results/studies/k2-spantpsw-(37, 3)_optcands_generations.pkl')
 
 #dat10 = np.array(gen10[-1])
 #dat20 = np.array(gen20[-1])
@@ -129,7 +129,7 @@ sc=ax.scatter(xhf,yhf,marker='o',edgecolors='r',facecolors='none',s=17,alpha=1.,
 sc=ax.scatter(xlf,ylf,marker='o',edgecolors='b',facecolors='none',s=17,alpha=1.,label='Correlation')
 #sc=ax.scatter(xck9,yck9,marker='o',c='magenta',s=17,alpha=1.,label='cokriging-9')
 #sc=ax.scatter(xck11,yck11,marker='o',c='purple',s=17,alpha=1.,label='cokriging-11')
-sc=ax.scatter(xck17,yck17,marker='o',c='orange',s=17,alpha=1.,label='cokriging-17')
+sc=ax.scatter(xck17,yck17,marker='o',c='orange',s=19,alpha=1.,label='Cokriging-8')
 
 font = {'family' : 'normal',
         'weight' : 'normal',
@@ -141,6 +141,42 @@ ax.set_title('Pareto-front')
 ax.set_xlabel('L/D',fontsize=14)
 ax.set_ylabel('Mass (kg)',fontsize=14)
 plt.legend()
+plt.show()
+
+
+g0 = np.array(cand30[-1])
+g2 = np.array(cand50[-1])
+gck17= np.array(cand40[-1])
+gck9 = np.array(cand10[-1])
+gck11= np.array(cand20[-1])
+
+
+
+#fig,ax = plt.subplots()
+#ax.grid()
+#ax.set_axisbelow(True)
+#ax.yaxis.grid(color='gray', linestyle='dashed')
+#ax.xaxis.grid(color='gray', linestyle='dashed')
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+#ax.scatter(g0[:,0], g0[:,1], facecolors='none', edgecolor='b',alpha=0.7,label='Correlation')
+#ax.scatter(g2[:,0], g2[:,1], facecolors='none', edgecolor='r',alpha=0.7,label='SU2')
+#ax.scatter(gck[:,0], gck[:,1], facecolors='orange', edgecolor='orange',alpha=0.9,label='Cokriging-8')
+ax.scatter(g0[:,0], g0[:,1],g0[:,2], c='b',alpha=0.7,label='Correlation')
+ax.scatter(g2[:,0], g2[:,1],g2[:,2], facecolors='none', edgecolor='r',alpha=0.7,label='SU2')
+ax.scatter(gck9[:,0], gck9[:,1],gck9[:,2],c='magenta',alpha=0.6,label='Cokriging-8',marker='s')
+ax.scatter(gck11[:,0], gck11[:,1],gck11[:,2], c='purple',alpha=0.5,label='Cokriging-11',marker='^')
+ax.scatter(gck17[:,0], gck17[:,1],gck17[:,2], c='orange',alpha=0.9,label='Cokriging-17',marker='X')
+font = {'family' : 'normal',
+        'weight' : 'normal',
+        'size'   : 10}
+ax.set_title('Optimal candidates')
+ax.set_xlabel('Span, (m)', fontsize=12)
+ax.set_ylabel('Taper', fontsize=12)
+ax.set_zlabel('Sweep, (deg)', fontsize=12)
+plt.legend()
+#ax.set_zlabel('L/D', fontsize=12)
+#ax.set_aspect('auto')
 plt.show()
 
 
