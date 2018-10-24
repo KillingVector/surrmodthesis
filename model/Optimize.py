@@ -48,9 +48,9 @@ def main():
     '''    Modify these values to choose fidelity level
         and modeling method    '''
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
-    fidelity_level  = 2 # 0 or 2 atm.
+    fidelity_level  = 0 # 0 or 2 atm.
     # MODEL METHOD
-    model_method    = 'ck'  # k or ck
+    model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
     hours           = 1.
     mins            = 30.
@@ -90,6 +90,11 @@ def main():
 
     t1b = datetime.datetime.now()
 
+
+#    optprob.inputs[:,1] = [6.3312045913,	0.0504797453,	5.2928409634]
+
+#    print nexus.objective()
+#    quit()
     
 ##########################################################################
 
@@ -207,17 +212,17 @@ def main():
 
         # surr.load_ck() # no .pkl
         # surr.model999 = loadModel() # pykriging built, need .pkl
-        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-(9, 3)')
+        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantp-.pkl')
 #        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-')
 #        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-(17, 3)')
-        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
-        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-9x3.csv',delimiter=',')
-#        surr.model0 = kriging(data1[:,0:3],data1[:,4])
-#        surr.model0.train()
-        ck0 = surr.modelck0
-#        print ck0.predict([4.28,0.05,45])
-#        print ck0.predict([13.45,0.065,5.25])
-        print surr.model0.predict([20., 0.05, 45.])
+#        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
+#        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-9x3.csv',delimiter=',')
+##        surr.model0 = kriging(data1[:,0:3],data1[:,4])
+##        surr.model0.train()
+#        ck0 = surr.modelck0
+##        print ck0.predict([4.28,0.05,45])
+##        print ck0.predict([13.45,0.065,5.25])
+#        print surr.model0.predict([20., 0.05, 45.])
 
         
         
@@ -233,17 +238,18 @@ def main():
 
 #        surr.get_plot(nexus,model=ck0,zlabel='L/D',mapname='winter')
         iw = optimizer(nexus,'ck')
-        if len(inpstr) <= 2:
-            surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
-            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
+#        if len(inpstr) <= 2:
+#            surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+#            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 ##            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D')
 ##            surr.get_plot(nexus,model=ke,model1=surr.modelck0,zlabel='L/D')
 
 #        quit()
         iw.evolve()
-#        iw.show_results(title='')
-#        iw.show_gen_results()
-        iw.save_results(name = './rawresults/cokriging/ck2-'+inputstring+str(np.shape(ck0.Xe)))
+        iw.show_results(title='')
+        iw.show_gen_results()
+#        iw.save_results(name = './rawresults/cokriging/ck2-'+inputstring+str(np.shape(ck0.Xe)))
+        iw.save_results(name = './rawresults/kriging/aaSPTP-ck0-'+inputstring)
 
 ######################### FROM FILE
     elif model_method == 'k' and from_file:
@@ -253,16 +259,25 @@ def main():
         p3  = [17., .2, 47.]
         p4  = [8., .8, 8.]
 
-        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-rcp_tipsw--LD.pkl')
-        km = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-rcp_tipsw--mass.pkl')
+        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-spantp--LD.pkl')
+        km = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-spantp--mass.pkl')
 
-        surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')#model1=k1,
-#        surr.get_plot(nexus,model=km,zlabel='Mass (kg)',mapname='copper')        
+#        surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')#model1=k1,
+##        surr.get_plot(nexus,model=km,zlabel='Mass (kg)',mapname='copper')        
 
-        quit()
-        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
-        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
+#        quit()
+#        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+#        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 
+        surr.model0 = k0
+        surr.model1 = km
+
+
+        iw = optimizer(nexus,'k')
+        iw.evolve()
+        iw.show_results(title='')
+        iw.show_gen_results()
+        iw.save_results(name = './rawresults/kriging/aaSPTP-ck0-'+inputstring)
 
         quit()
         print '\n\n Kriging model info:\n'
@@ -416,7 +431,7 @@ def setup(fidelity_method):
             [ 'span'       ,   vec.span, (  2*vec.root_chord,   20.0 ),  1.0, Units.less],
 #    #        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
             [ 'rcp_tip' ,  vec.rcp[-1], (  0.05,    1.0 ),  1.0, Units.less    ],  
-            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
+#            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
 #            [ 'dihedral' ,  vec.do[0] , ( -5.0,    5.0 ),  1.0, Units.degrees ],
 #            [ 'twist_tip' ,  vec.tw[-1], ( -5.0,    5.0 ),1.0, Units.degrees  ],
         ])
