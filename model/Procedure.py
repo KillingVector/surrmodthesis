@@ -296,8 +296,9 @@ def post_process(nexus):
     # check AoA
     aoa_rad = np.average(res.aerodynamics.angle_of_attack)
     aoa_deg = np.rad2deg(res.aerodynamics.angle_of_attack[0])
+    aoa_std = np.rad2deg(np.std(res.aerodynamics.angle_of_attack))
     print 'Angle of attack : ' + str(aoa_deg) + ' --st dev : ' \
-    + str(np.rad2deg(np.std(res.aerodynamics.angle_of_attack)))
+    + str(aoa_std)
     print 'Velocity vector average : ' + str(np.average(res.frames.inertial.velocity_vector[:,0]))
 #    print res.frames.wind.drag_force_vector
 #    print res.frames.wind.lift_force_vector
@@ -311,16 +312,20 @@ def post_process(nexus):
     print 'post processing L/D : ' + str(lond) + '\n====\n\n'
     
     # calculate objective + constraint
-    CL_max                  = 1.
+    CL_max                  = .8
     mass_max                = 200.
+    aoa_std_max             = 0.25
+    pen_scale_aoa           = 1.
+    pen_val_aoa             = (max(0,aoa_std-aoa_std_max))**2
     pen_scale_cl            = 1.0e-1
     pen_val_cl              = (max(0,CL-CL_max))**2
     pen_scale_m             = 2.5e-3
     pen_val_m               = (max(0,mass-mass_max))**2
     penalty_cl              = pen_scale_cl * pen_val_cl
+    penalty_aoa             = pen_scale_aoa*pen_val_aoa
     print 'CL penalty : ' + str(penalty_cl)
     penalty_m               = pen_scale_m * pen_val_m
-    obj_ld                  = -lond + penalty_cl
+    obj_ld                  = -lond + penalty_cl +penalty_aoa
     obj_mass                = mass + penalty_m
 
 
@@ -328,6 +333,12 @@ def post_process(nexus):
     summary = nexus.summary
     summary.CL                = 1.2 - CL
 
+    if not hasattr(summary,'aoa'):
+        summary.aoa = []
+
+    summary.aoa.append([aoa_deg, aoa_std])
+    summary.penalty           = penalty_cl
+    print 'AOA : ' + str(summary.aoa)
     summary.invVel            = invVel
     summary.obj_ld            = obj_ld
     summary.obj_mass          = obj_mass
