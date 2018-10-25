@@ -336,7 +336,7 @@ def post_process(nexus):
     if not hasattr(summary,'aoa'):
         summary.aoa = []
 
-    summary.aoa.append([aoa_deg, aoa_std])
+    summary.aoa.append([aoa_deg[0], aoa_std])
     summary.penalty           = penalty_cl
     print 'AOA : ' + str(summary.aoa)
     summary.invVel            = invVel

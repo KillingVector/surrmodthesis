@@ -48,7 +48,7 @@ def main():
     '''    Modify these values to choose fidelity level
         and modeling method    '''
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
-    fidelity_level  = 0 # 0 or 2 atm.
+    fidelity_level  = 2 # 0 or 2 atm.
     # MODEL METHOD
     model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
@@ -105,113 +105,118 @@ def main():
         surr.sample_plan.size = 30
         surr.sample_plan.lhc_type   = 'o'
         surr.sample_plan.time       = time
-        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
-
+#        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
+        timea = datetime.datetime.now()
 
         data    = np.genfromtxt('//home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/30degk0-spantpsw-LHC.csv',delimiter=',')
-        surr.sample_plan.lhc = data[:,0:6]
+#        surr.sample_plan.lhc = data[0:6,:]
 ### 1
-        surr.evaluate_of(nexus)
-        t1b = datetime.datetime.now()
-        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file11:
-            wr11=csv.writer(file11)
-            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
-                row = []
-                for item in surr.sample_plan.lhc[i,:]:
-                    row.append(item)
-                wr11.writerow(row)
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file11:
+#            wr11=csv.writer(file11)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr11.writerow(row)
 
-        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file12:
-            wr12=csv.writer(file12)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr12.writerow(row)
 
-### 2
-        surr.sample_plan.lhc = data[:,6:12]
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file12:
+#            wr12=csv.writer(file12)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr12.writerow(row)
+#        nexus.summary.aoa = []
 
-        surr.evaluate_of(nexus)
-        t1b = datetime.datetime.now()
-        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file21:
-            wr21=csv.writer(file21)
-            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
-                row = []
-                for item in surr.sample_plan.lhc[i,:]:
-                    row.append(item)
-                wr21.writerow(row)
+#### 2
+#        surr.sample_plan.lhc = data[6:12,:]
 
-        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file22:
-            wr22=csv.writer(file22)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr22.writerow(row)
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file21:
+#            wr21=csv.writer(file21)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr21.writerow(row)
 
-### 3
-        surr.sample_plan.lhc = data[:,12:18]
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file22:
+#            wr22=csv.writer(file22)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr22.writerow(row)
+#        nexus.summary.aoa = []
 
-        surr.evaluate_of(nexus)
-        t1b = datetime.datetime.now()
-        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file31:
-            wr31=csv.writer(file31)
-            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
-                row = []
-                for item in surr.sample_plan.lhc[i,:]:
-                    row.append(item)
-                wr31.writerow(row)
+#### 3
+#        surr.sample_plan.lhc = data[12:18,:]
 
-        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file32:
-            wr32=csv.writer(file32)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr32.writerow(row)
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file31:
+#            wr31=csv.writer(file31)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr31.writerow(row)
 
-### 4
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file32:
+#            wr32=csv.writer(file32)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr32.writerow(row)
+#        nexus.summary.aoa = []
 
-        surr.sample_plan.lhc = data[:,18:24]
+#### 4
 
-        surr.evaluate_of(nexus)
-        t1b = datetime.datetime.now()
-        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file41:
-            wr41=csv.writer(file41)
-            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
-                row = []
-                for item in surr.sample_plan.lhc[i,:]:
-                    row.append(item)
-                wr41.writerow(row)
+#        surr.sample_plan.lhc = data[18:24,:]
 
-        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file42:
-            wr42=csv.writer(file42)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr42.writerow(row)
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file41:
+#            wr41=csv.writer(file41)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr41.writerow(row)
+
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file42:
+#            wr42=csv.writer(file42)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr42.writerow(row)
+#        nexus.summary.aoa = []
 
 ### 5
 
-        surr.sample_plan.lhc = data[:,24:30]
+        surr.sample_plan.lhc = data[24:30,:]
 
         surr.evaluate_of(nexus)
         t1b = datetime.datetime.now()
         with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file51:
             wr51=csv.writer(file51)
-            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
+            for i in range(0,np.shape(nexus.summary.aoa)[0]):
                 row = []
-                for item in surr.sample_plan.lhc[i,:]:
+                for item in nexus.summary.aoa[i]:
                     row.append(item)
                 wr51.writerow(row)
 
@@ -224,18 +229,19 @@ def main():
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
                 wr52.writerow(row)
+        nexus.summary.aoa = []
 
 ### 6
 
-        surr.sample_plan.lhc = data[:,30:38]
+        surr.sample_plan.lhc = data[30:38,:]
 
         surr.evaluate_of(nexus)
         t1b = datetime.datetime.now()
         with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file61:
             wr61=csv.writer(file61)
-            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
+            for i in range(0,np.shape(nexus.summary.aoa)[0]):
                 row = []
-                for item in surr.sample_plan.lhc[i,:]:
+                for item in nexus.summary.aoa[i]:
                     row.append(item)
                 wr61.writerow(row)
 
@@ -248,10 +254,12 @@ def main():
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
                 wr62.writerow(row)
+        nexus.summary.aoa = []
 
 #        surr.X = data[:,0:3]
 #        surr.y = data[:,3:5]
-
+        timeb = datetime.datetime.now()
+        print 'the run time was : ' + str((timeb - timea).total_seconds())
 
         quit()
 
