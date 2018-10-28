@@ -61,16 +61,16 @@ class cokriging(matrixops):
             self.p      = 2.
             self.pc     = 2.
             self.pd     = 2.
-            self.rho    = 1.9961 # rho regression parameter
+            self.rho    = 2. # rho regression parameter
             self.thetad = np.ones(self.kc)
 
             # training values
             self.thetamin = 1e-5 #* np.ones(self.kc)
             self.thetamax = 100 #* np.ones(self.kc)
-            self.pmin = 0.
+            self.pmin = 1.5#0. #not gonna try handle noise atm
             self.pmax = 2.
             self.rhomin = 0.
-            self.rhomax = 2.5
+            self.rhomax = 6.
 
 
             # final model values

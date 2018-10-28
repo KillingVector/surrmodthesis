@@ -58,7 +58,7 @@ def main():
     time            = hours*60*60 + mins*60 + secs
     # 
     fidelity_method = [fidelity_level, model_method]
-    from_file = False
+    from_file = True
     
     nexus = setup(fidelity_method)
     optprob = nexus.optimization_problem
@@ -90,8 +90,8 @@ def main():
 
     t1b = datetime.datetime.now()
 
-
-#    optprob.inputs[:,1] = [6.3312045913,	0.0504797453,	5.2928409634]
+    print optprob.inputs[:,1]
+#    optprob.inputs[:,1] = [4.3301653087,	0.0504995492,	26.7446129654,	-1.9490900158]
 
 #    print nexus.objective()
 #    quit()
@@ -102,26 +102,29 @@ def main():
 
     if model_method == 'k' and not from_file:
 #        a = nexus.objective()
-        surr.sample_plan.size = 30
+        surr.sample_plan.size = 40
         surr.sample_plan.lhc_type   = 'o'
         surr.sample_plan.time       = time
 #        surr.create_sample(nexus)   # DO THIS JUST FOR CORNERS
         timea = datetime.datetime.now()
 
-        data    = np.genfromtxt('//home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/30degk0-spantpsw-LHC.csv',delimiter=',')
+        data    = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/30degk0-spantpswtw-LHC.csv',delimiter=',')
 #        surr.sample_plan.lhc = data[0:6,:]
 ### 1
 #        surr.evaluate_of(nexus)
 #        t1b = datetime.datetime.now()
 #        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file11:
+##        with open('/home/ashaiden/Documents/surrmodthesis/model/rawresults/LHC/30degk0-spantpswtw-LHC.csv', 'w+b') as file11:
 #            wr11=csv.writer(file11)
 #            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+##            for i in range(0,np.shape(surr.sample_plan.lhc)[0]):
 #                row = []
+##                for item in surr.sample_plan.lhc[i,:]:
 #                for item in nexus.summary.aoa[i]:
 #                    row.append(item)
 #                wr11.writerow(row)
 
-
+##        quit()
 #        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file12:
 #            wr12=csv.writer(file12)
 #            for i in range(0,np.shape(surr.X)[0]):
@@ -208,52 +211,101 @@ def main():
 
 ### 5
 
-        surr.sample_plan.lhc = data[24:30,:]
+#        surr.sample_plan.lhc = data[23:30,:]
+
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file51:
+#            wr51=csv.writer(file51)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr51.writerow(row)
+
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file52:
+#            wr52=csv.writer(file52)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr52.writerow(row)
+#        nexus.summary.aoa = []
+
+#### 6
+
+#        surr.sample_plan.lhc = data[30:38,:]
+
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file61:
+#            wr61=csv.writer(file61)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr61.writerow(row)
+
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file62:
+#            wr62=csv.writer(file62)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr62.writerow(row)
+#        nexus.summary.aoa = []
+
+#### 7
+#        surr.sample_plan.lhc = data[38:44,:]
+
+#        surr.evaluate_of(nexus)
+#        t1b = datetime.datetime.now()
+#        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file71:
+#            wr71=csv.writer(file71)
+#            for i in range(0,np.shape(nexus.summary.aoa)[0]):
+#                row = []
+#                for item in nexus.summary.aoa[i]:
+#                    row.append(item)
+#                wr71.writerow(row)
+
+#        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file72:
+#            wr72=csv.writer(file72)
+#            for i in range(0,np.shape(surr.X)[0]):
+#                row = []
+#                for item in surr.X[i,:]:
+#                    row.append(item)
+#                row.append(surr.y[i,0])
+#                row.append(surr.y[i,1])
+#                wr72.writerow(row)
+#        nexus.summary.aoa = []
+
+### 8
+
+        surr.sample_plan.lhc = data[44:57,:]
 
         surr.evaluate_of(nexus)
         t1b = datetime.datetime.now()
-        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file51:
-            wr51=csv.writer(file51)
+        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file81:
+            wr81=csv.writer(file81)
             for i in range(0,np.shape(nexus.summary.aoa)[0]):
                 row = []
                 for item in nexus.summary.aoa[i]:
                     row.append(item)
-                wr51.writerow(row)
+                wr81.writerow(row)
 
-        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file52:
-            wr52=csv.writer(file52)
+        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file82:
+            wr82=csv.writer(file82)
             for i in range(0,np.shape(surr.X)[0]):
                 row = []
                 for item in surr.X[i,:]:
                     row.append(item)
                 row.append(surr.y[i,0])
                 row.append(surr.y[i,1])
-                wr52.writerow(row)
-        nexus.summary.aoa = []
-
-### 6
-
-        surr.sample_plan.lhc = data[30:38,:]
-
-        surr.evaluate_of(nexus)
-        t1b = datetime.datetime.now()
-        with open('./rawresults/kriging/30degaoa'+savename+str(t1b)+'.csv','w+b') as file61:
-            wr61=csv.writer(file61)
-            for i in range(0,np.shape(nexus.summary.aoa)[0]):
-                row = []
-                for item in nexus.summary.aoa[i]:
-                    row.append(item)
-                wr61.writerow(row)
-
-        with open('./rawresults/kriging/30deg'+savename+'X-y'+str(t1b)+'.csv','w+b') as file62:
-            wr62=csv.writer(file62)
-            for i in range(0,np.shape(surr.X)[0]):
-                row = []
-                for item in surr.X[i,:]:
-                    row.append(item)
-                row.append(surr.y[i,0])
-                row.append(surr.y[i,1])
-                wr62.writerow(row)
+                wr82.writerow(row)
         nexus.summary.aoa = []
 
 #        surr.X = data[:,0:3]
@@ -359,39 +411,40 @@ def main():
 
         # surr.load_ck() # no .pkl
         # surr.model999 = loadModel() # pykriging built, need .pkl
-        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokriging/ck2-spantp-.pkl')
+        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantp-corr-rho')
 #        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-')
 #        surr.load_ck('/home/ashaiden/Documents/surrmodthesis/model/rawresults/cokrigingck2-spantpsw-(17, 3)')
-#        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
-#        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-9x3.csv',delimiter=',')
-##        surr.model0 = kriging(data1[:,0:3],data1[:,4])
-##        surr.model0.train()
-#        ck0 = surr.modelck0
+        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-sptp-X-y.csv',delimiter=',')
+        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-ySML.csv',delimiter=',')
+#        surr.model0 = kriging(data1[:,0:3],data1[:,4])
+#        surr.model0.train()
+        ck0 = surr.modelck0
 ##        print ck0.predict([4.28,0.05,45])
 ##        print ck0.predict([13.45,0.065,5.25])
 #        print surr.model0.predict([20., 0.05, 45.])
 
         
-        
-#        k0 = kriging(datac[:,0:2],datac[:,2])
-#        k0.train()
 
-#        k1 = kriging(datae[:,0:2],datae[:,2])
-#        k1.train()
+        k0 = kriging(data1[:,0:2],data1[:,2])
+        k0.train()
+
+        k1 = kriging(data2[:,0:2],data2[:,2])
+        k1.train()
 #        surr.model1 = k1
         t2 = datetime.datetime.now()
 #        a = ck0.predict([7.8,0.38])
 #        b = k1.predict([7.8,0.38])
 
 #        surr.get_plot(nexus,model=ck0,zlabel='L/D',mapname='winter')
-        iw = optimizer(nexus,'ck')
-#        if len(inpstr) <= 2:
-#            surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
-#            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
+
+        if len(inpstr) <= 2:
+            surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 ##            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D')
 ##            surr.get_plot(nexus,model=ke,model1=surr.modelck0,zlabel='L/D')
 
-#        quit()
+        quit()
+        iw = optimizer(nexus,'ck')
         iw.evolve()
         iw.show_results(title='')
         iw.show_gen_results()
@@ -406,25 +459,38 @@ def main():
         p3  = [17., .2, 47.]
         p4  = [8., .8, 8.]
 
-        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-spantp--LD.pkl')
-        km = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k0-spantp--mass.pkl')
+        
+#        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/1NEW30degmax_sptpswptw_results.csv',delimiter=',')
+##        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-ySML.csv',delimiter=',')
+#        data2 = data1
+#        k0 = kriging(data1[:,0:4],data1[:,4])
+#        k0.train()
 
-#        surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')#model1=k1,
-##        surr.get_plot(nexus,model=km,zlabel='Mass (kg)',mapname='copper')        
+#        k1 = kriging(data2[:,0:4],data2[:,5])
+#        k1.train()
+
+#        saveModel(k0,'/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/0NEW30degmax_sptpswpTW_results-k2.pkl')
+#        saveModel(k1,'/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/0NEW30degmax_sptpswpTW_results-k2mass.pkl')
+
+        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-spantpsw-(37, 3)-LD.pkl')
+        k1 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-spantpsw-(37, 3)-mass.pkl')
+        
+#        surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')
+#        surr.get_plot(nexus,model=k1,zlabel='Mass (kg)',mapname='copper')        
 
 #        quit()
 #        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
 #        surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 
         surr.model0 = k0
-        surr.model1 = km
+        surr.model1 = k1
 
 
         iw = optimizer(nexus,'k')
         iw.evolve()
         iw.show_results(title='')
         iw.show_gen_results()
-        iw.save_results(name = './rawresults/kriging/aaSPTP-ck0-'+inputstring)
+#        iw.save_results(name = './rawresults/kriging/0NEW30degmax_k2-'+inputstring)
 
         quit()
         print '\n\n Kriging model info:\n'
@@ -502,7 +568,7 @@ def base_design():
     # vehicle dats (:
     vec             = Data()
 
-    vec.span            = 7.03847301741048#6.5
+    vec.span            = 9.36128008739618#6.5
     vec.root_chord      = 2.14
 
     # size payload (max)
@@ -521,11 +587,11 @@ def base_design():
 
     # make sizing vectors
     vec.psl             = np.array([0.])#, pl_psl])#, 0.5])
-    vec.sqc             = np.array([20.])#30.])#, 5.])#, 10.])
-    vec.rcp             = np.array([1., 0.4])#, .4])#, .1]) #rcp[-1] tip chord
+    vec.sqc             = np.array([27.4014833295441])#30.])#, 5.])#, 10.])
+    vec.rcp             = np.array([1., 0.0504995491847691])#, .4])#, .1]) #rcp[-1] tip chord
     vec.ttc             = np.array([pl_ttc, 0.2])#, 0.1])#, .08]) # thickness
     vec.do              = np.array([0.])#, 0.])#, 0.])
-    vec.tw              = np.array([0.,0.]) # tip twist only, root always 0 for flying wing
+    vec.tw              = np.array([0.,-0.925145936653042]) # tip twist only, root always 0 for flying wing
     vec.num_seg         = len(vec.psl)
     
 

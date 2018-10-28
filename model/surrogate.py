@@ -718,18 +718,20 @@ class Surrogate_Data(Data):
 
         config = 'lfhf'
 #        self.ck_create_sample(nexus)
-        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-spantpsw-X-y.csv',delimiter=',')
-        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptpsw-X-y-9x3.csv',delimiter=',')
+        data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-sptp-X-y.csv',delimiter=',')
+        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-ySML.csv',delimiter=',')
 
-        self.X = data1[:,0:3]
+        length = len(nexus.optimization_problem.inputs[:,0])
+
+        self.X = data1[:,0:length]
         self.sample_plan.lhc = self.X
         self.sample_plan.lhc_mf = self.X
-        self.y = data1[:,3:5]
+        self.y = data1[:,length:length+2]
 
-        self.Xe = data2[:,0:3]
+        self.Xe = data2[:,0:length]
         self.sample_plan.lhc_hf = self.Xe
 
-        self.ye = data2[:,3:5]
+        self.ye = data2[:,length:length+2]
         
 
         
@@ -801,7 +803,7 @@ class Surrogate_Data(Data):
 
         self.modelck0   = ck0
             #   SAVE MODEL
-        self.modelck0.save_ck_model(filename+str(np.shape(X_exp)))
+        self.modelck0.save_ck_model(filename+str(np.shape(X_exp))+str(datetime.datetime.now()))
         '''
         Xck = self.scale_points(self.model0.X,nexus)
             #   make l/d model for comparison
