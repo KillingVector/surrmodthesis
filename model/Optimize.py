@@ -50,7 +50,7 @@ def main():
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
     fidelity_level  = 2 # 0 or 2 atm.
     # MODEL METHOD
-    model_method    = 'k'  # k or ck
+    model_method    = 'ck'  # k or ck
     # ALLOWED TIME (s) 
     hours           = 1.
     mins            = 30.
@@ -58,7 +58,7 @@ def main():
     time            = hours*60*60 + mins*60 + secs
     # 
     fidelity_method = [fidelity_level, model_method]
-    from_file = True
+    from_file = False
     
     nexus = setup(fidelity_method)
     optprob = nexus.optimization_problem
@@ -422,23 +422,24 @@ def main():
 ##        print ck0.predict([4.28,0.05,45])
 ##        print ck0.predict([13.45,0.065,5.25])
 #        print surr.model0.predict([20., 0.05, 45.])
-
+        ck0.rho = 1.4
         
 
-        k0 = kriging(data1[:,0:2],data1[:,2])
-        k0.train()
+#        k0 = kriging(data1[:,0:2],data1[:,2])
+#        k0.train()
 
-        k1 = kriging(data2[:,0:2],data2[:,2])
-        k1.train()
+#        k1 = kriging(data2[:,0:2],data2[:,2])
+#        k1.train()
 #        surr.model1 = k1
         t2 = datetime.datetime.now()
 #        a = ck0.predict([7.8,0.38])
 #        b = k1.predict([7.8,0.38])
 
-#        surr.get_plot(nexus,model=ck0,zlabel='L/D',mapname='winter')
-
+        surr.get_plot(nexus,model=ck0,zlabel='L/D',mapname='winter')
+        quit()
         if len(inpstr) <= 2:
             surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
+            quit()
             surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D',mapname='winter')
 ##            surr.get_plot(nexus,model=k1,model1=ck0,zlabel='L/D')
 ##            surr.get_plot(nexus,model=ke,model1=surr.modelck0,zlabel='L/D')
@@ -469,14 +470,14 @@ def main():
 #        k1 = kriging(data2[:,0:4],data2[:,5])
 #        k1.train()
 
-#        saveModel(k0,'/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/0NEW30degmax_sptpswpTW_results-k2.pkl')
-#        saveModel(k1,'/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/0NEW30degmax_sptpswpTW_results-k2mass.pkl')
+#        saveModel(k0,'/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-sptp--LD.pkl')
+#        saveModel(k1,'//home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-sptp--mass.pkl')
 
-        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-spantpsw-(37, 3)-LD.pkl')
-        k1 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-spantpsw-(37, 3)-mass.pkl')
-        
-#        surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')
-#        surr.get_plot(nexus,model=k1,zlabel='Mass (kg)',mapname='copper')        
+        k0 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-tpsw--LD.pkl')
+        k1 = loadModel('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/k2-tpsw--mass.pkl')
+        if len(inpstr) <= 2:
+            surr.get_plot(nexus,model=k0,zlabel='L/D',mapname='winter')
+            surr.get_plot(nexus,model=k1,zlabel='Mass (kg)',mapname='copper')        
 
 #        quit()
 #        surr.get_plot(nexus,model=k0,model1=ck0,zlabel='L/D',mapname='winter')#model1=k1,
@@ -644,7 +645,7 @@ def setup(fidelity_method):
             [ 'span'       ,   vec.span, (  2*vec.root_chord,   20.0 ),  1.0, Units.less],
 #    #        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
             [ 'rcp_tip' ,  vec.rcp[-1], (  0.05,    1.0 ),  1.0, Units.less    ],  
-            [ 'sweep', vec.sqc[0], (  0.0,   30.0 ),  1.0, Units.degrees ],
+#            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
 #            [ 'dihedral' ,  vec.do[0] , ( -5.0,    5.0 ),  1.0, Units.degrees ],
 #            [ 'twist_tip' ,  vec.tw[-1], ( -5.0,    5.0 ),1.0, Units.degrees  ],
         ])

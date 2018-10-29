@@ -719,7 +719,7 @@ class Surrogate_Data(Data):
         config = 'lfhf'
 #        self.ck_create_sample(nexus)
         data1 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k0-sptp-X-y.csv',delimiter=',')
-        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-ySML.csv',delimiter=',')
+        data2 = np.genfromtxt('/home/ashaiden/Documents/surrmodthesis/model/rawresults/kriging/kriging_XY/k2-sptp-X-yMED.csv',delimiter=',')
 
         length = len(nexus.optimization_problem.inputs[:,0])
 
