@@ -50,7 +50,7 @@ def main():
     # FIDELITY LEVEL: low = 0;  med = 1;  high = 2
     fidelity_level  = 2 # 0 or 2 atm.
     # MODEL METHOD
-    model_method    = 'ck'  # k or ck
+    model_method    = 'k'  # k or ck
     # ALLOWED TIME (s) 
     hours           = 1.
     mins            = 30.
@@ -91,10 +91,10 @@ def main():
     t1b = datetime.datetime.now()
 
     print optprob.inputs[:,1]
-#    optprob.inputs[:,1] = [4.3301653087,	0.0504995492,	26.7446129654,	-1.9490900158]
+    optprob.inputs[:,1] = [6.3312045913,	0.0504797453,	5.2928409634]
 
-#    print nexus.objective()
-#    quit()
+    print nexus.objective()
+    quit()
     
 ##########################################################################
 
@@ -645,7 +645,7 @@ def setup(fidelity_method):
             [ 'span'       ,   vec.span, (  2*vec.root_chord,   20.0 ),  1.0, Units.less],
 #    #        [ 'rootChord',   vec.root_chord, (  0.5,    10. ),  1.0, Units.meter  ],
             [ 'rcp_tip' ,  vec.rcp[-1], (  0.05,    1.0 ),  1.0, Units.less    ],  
-#            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
+            [ 'sweep', vec.sqc[0], (  0.0,   45.0 ),  1.0, Units.degrees ],
 #            [ 'dihedral' ,  vec.do[0] , ( -5.0,    5.0 ),  1.0, Units.degrees ],
 #            [ 'twist_tip' ,  vec.tw[-1], ( -5.0,    5.0 ),1.0, Units.degrees  ],
         ])
